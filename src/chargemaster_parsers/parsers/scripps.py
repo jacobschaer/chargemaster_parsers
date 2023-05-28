@@ -36,6 +36,7 @@ class ScrippsChargeMasterParser:
 
     def parse_artifacts(self, artifacts):
         for artifact_url in self.artifact_urls:
+            cash_procedures_yielded = set()
             reader = csv.DictReader(io.TextIOWrapper(artifacts[artifact_url]), delimiter="|")
             for row in reader:
                 location = None
@@ -94,9 +95,25 @@ class ScrippsChargeMasterParser:
                 except ValueError:
                     pass
 
-                # TODO: CASH
-                # TODO: Avoid duplicates
-
+                # Every line references cash but make sure to only yield it once
+                if procedure_identifier not in cash_procedures_yielded and cash is not None:
+                    yield ChargeMasterEntry(
+                            location = location,
+                            procedure_identifier = procedure_identifier,
+                            procedure_description = procedure_description,
+                            ndc_code = ndc_code,
+                            nubc_revenue_code = nubc_revenue_code,
+                            cpt_code = cpt_code,
+                            hcpcs_code = hcpcs_code,
+                            ms_drg_code = ms_drg_code,
+                            max_reimbursement = max_reimbursement,
+                            min_reimbursement = min_reimbursement,
+                            expected_reimbursement = expected_inpatient_reimbursement,
+                            in_patient = True,
+                            payer = "Cash",
+                            gross_charge = cash,
+                        )
+                    cash_procedures_yielded.add(procedure_identifier)
 
                 for plan in plan.split(','):
                     if gross_charges_inpatient:

@@ -26,6 +26,7 @@ class KaiserChargeMasterParser:
                 print(name)
                 match = re.match(r"(.+?)Kaiser(.+?)ChargeDescriptionMaster.csv$", name)
                 if match:
+                    print("Yas")
                     location = match.groups()[1]
                     with zip_file.open(name) as csv_file:
                         for _ in range(4):
@@ -62,7 +63,7 @@ class KaiserChargeMasterParser:
                                 procedure_code = row.pop("Procedure Code (CPT / HCPCS)")
                                 if len(procedure_code) == 5 and procedure_code[0].isnumeric():
                                     cpt_code = procedure_code
-                                else:
+                                elif procedure_code:
                                     hcpcs_code = procedure_code
                             except KeyError:
                                 pass
@@ -85,4 +86,5 @@ class KaiserChargeMasterParser:
                                         payer = payer,
                                         plan = plan,
                                         in_patient = in_patient,
+                                        location=location
                                     )
