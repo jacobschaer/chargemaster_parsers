@@ -76,7 +76,52 @@ def test_ndc(parser):
         for plan, reimbursement in expected_reimbursement.items()
     ]
 
-    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.StringIO(json.dumps(row))}))
+    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(row).encode('utf-8'))}))
+    assert sorted(expected_result) == sorted(actual_result)
+
+def test_bad_quote_and_null(parser):
+    row = """[{
+        "PROCEDURE": "Where "Variable" exists, a rate may have been negotiated for this service, but the terms of reimbursement prevent the generation of a single fixed rate for this item or service package",
+        "CODE_TYPE": null,
+        "CODE": null,
+        "NDC": null,
+        "REV_CODE": null,
+        "PROCEDURE_DESCRIPTION": null,
+        "QUANTITY": null,
+        "OP_PRICE": null,
+        "REIMB_MIN": null,
+        "REIMB_MAX": null,
+        "AETNA BEHAVIORIAL HEALTH ": null,
+        "AETNA MANAGED CHOICE ; AETNA UNLISTED PPO ; GEHA PO BOX 981707 ; MERITAIN HEALTH PO BOX 27267 ; MERITAIN HEALTH PO BOX 853921 ; AETNA CHOICE POS II ": null,
+        "AFFORDABLE HEALTH ; ANTHEM BLUE CROSS PPO PRUDENT BUYER ; BLUE CROSS HMO UNLISTED IPA ; BLUE CROSS SCRIPPS COASTAL ; BLUE CROSS OUT OF STATE BC/BS ; FEDERAL EMPLOYEES  - FEP ; SCRIPPS HEALTH COMP ; ANTHEM BLUE CROSS EPO ; BLUE CROSS  IMPERIAL COUNTY MED G": null,
+        "ANTHEM BLUE CROSS BH ": null,
+        "BLUE CROSS HOUSE STAFF PRUDENT BUYER ": null,
+        "BLUE CROSS UC CARE ": null,
+        "BLUE SHIELD COVERED CALIFORNIA PPO ": null,
+        "BLUE SHIELD HMO UNLISTED IPA ; BLUE SHIELD IMPERIAL COUNTY MED GRP ": null,
+        "BLUE SHIELD MHSA BH ": null,
+        "BLUE SHIELD OUT OF STATE BC/BS ; BLUE SHIELD PPO ": null,
+        "CIGNA PPO PO BOX 182223 ; GREAT WEST PPO ; CIGNA UNLISTED PPO ; CIGNA PPO PO BOX 188061 ": null,
+        "HEALTH NET COVERED CA PPO ": null,
+        "HEALTH NET PPO ; HEALTH NET HMO UNLISTED IPA ; HEALTH NET COVERED CALIFORNIA PCAMG ; HEALTH NET COVERED CA HMO DIRECT NETWORK ": null,
+        "KAISER NORTH ; KAISER SOUTH ": null,
+        "KAISER RAD ONC ": null,
+        "OPTUM EAP & BH ": null,
+        "OPTUM TRANSPLANT ": null,
+        "SHARP HEALTH PLAN SCMG ; SHARP HEALTH PLAN GRAYBILL MED GRP ; SHARP HEALTH PLAN SHARP REES STEALY ": null,
+        "STUDENT RESOURCES ; UHC UNLISTED PPO ; UHC PPO ATLANTA GA ; UHC PPO SALT LAKE CITY UT ; UMR - PO BOX 30541 SALT LAKE CITY ": null,
+        "UC MC CC33D5SKQ ": null,
+        "UC MC HBGHFZ ; UC MC HBGJBI ": null,
+        "UCSD STUDENT HEALTH ": null,
+        "UHC NAVIGATE ": null,
+        "UHC PPO QUALCOMM ": null,
+        "UHC WEST MERCY PHY MED GRP ; UHC WEST SHARP REES STEALY ; UHC WEST SHARP COMMUNITY MED GRP ": null,
+        "UNLISTED HMO NON CONTRACTED ; UNLISTED PPO NON CONTRACTED ": null
+    }]""".strip()
+
+    expected_result = []
+
+    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(row.encode('utf-8'))}))
     assert sorted(expected_result) == sorted(actual_result)
 
 def test_hcps(parser):
@@ -134,5 +179,5 @@ def test_hcps(parser):
         for plan, reimbursement in expected_reimbursement.items()
     ]
 
-    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.StringIO(json.dumps(row))}))
+    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(row).encode('utf-8'))}))
     assert sorted(expected_result) == sorted(actual_result)

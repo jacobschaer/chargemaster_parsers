@@ -24,9 +24,20 @@ class UCSDChargeMasterParser:
         return [UCSDChargeMasterParser.ARTIFACT_URL]
 
     def parse_artifacts(self, artifacts):
-        for row in json.load(artifacts[self.ARTIFACT_URL], ensure_ascii=False):
-            # Deal with unicode and whitespace
-            filtered_row = {key.encode('ascii', 'ignore').decode().strip() : value.encode('ascii', 'ignore').decode().strip() for key, value in row.items()}
+        # What a disaster - instead of being able to just stream the binary contents with json.load as a utf-8
+        # encoded file, UCSD appears to have included some unescaped quotes and bad UTF-8 sequences. But the default
+        # codecs decode error functions end up leaving behind the quote, and registering a new one would lack sufficient
+        # context to find the weird sequences
+        decoded = artifacts[self.ARTIFACT_URL].read().decode('utf-8', errors='replace').replace('�"�', "").replace('"Where "Variable" exists,', '"Where \'Variable\' exists,')
+        for row in json.loads(decoded):
+            # Deal with non-ascii stuff and whitespace
+            filtered_row = {}
+            for key, value in row.items():
+                filtered_key = key.encode('ascii', errors='ignore').decode().strip()
+                filtered_value = None
+                if value:
+                    filtered_value = value.encode('ascii', errors='ignore').decode().strip()
+                filtered_row[filtered_key] = filtered_value
 
             location = None
             procedure_identifier = None
@@ -50,13 +61,13 @@ class UCSDChargeMasterParser:
             try:
                 # This can be "Variable" - which we'll treat as None
                 min_reimbursement = float(filtered_row.pop('REIMB_MIN'))
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, TypeError):
                 pass
 
             try:
                 # This can be "Variable" - which we'll treat as None
                 max_reimbursement = float(filtered_row.pop('REIMB_MAX'))
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, TypeError):
                 pass
 
             try:
@@ -70,7 +81,7 @@ class UCSDChargeMasterParser:
                     if nubc_revenue_code_match:
                         nubc_revenue_code = nubc_revenue_code_match.groups()[0]
 
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, TypeError):
                 pass
 
             try:
@@ -82,7 +93,7 @@ class UCSDChargeMasterParser:
             # This is usually "Variable", sometimes "OP_PRICE" almost useless espeicallys since we have min/max and insurance rates
             try:
                 in_patient_price = float(filtered_row.pop("IP_PRICE"))
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, TypeError):
                 pass
 
             try:
@@ -138,6 +149,7 @@ class UCSDChargeMasterParser:
             except KeyError:
                 pass
 
+
             # Any remaining fields will be insurance fields which have keys that are compound by semicolon
             # TODO: These are grouped by "payer" but payer isn't specified directly. I guess it can usually
             # be guessed by the common suffix though
@@ -146,7 +158,7 @@ class UCSDChargeMasterParser:
                     plan = insurance_provder.strip()
                     try:
                         expected_reimbursement = float(value)
-                    except ValueError:
+                    except (ValueError, TypeError):
                         continue
 
                     yield ChargeMasterEntry(

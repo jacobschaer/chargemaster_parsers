@@ -6,7 +6,6 @@ from .parsers import ChargeMasterEntry
 
 class SharpChargeMasterParser:
     INSTITUTION_NAME = "Sharp"
-    ARTIFACT_URL = "https://www.rchsd.org/documents/2022/07/chargemaster-2.xlsx/"
 
     # Sharp kinda sucks - they only give gross/average charges and they spread out
     # their charge masters across a bazillion files with only somewhat deterministic
@@ -280,15 +279,3 @@ class SharpChargeMasterParser:
                                         gross_charge = charge)
                                 except ValueError:
                                     pass
-
-            # if i == 0:
-            #     continue
-            # else:
-            #     yield ChargeMasterEntry(
-            #         procedure_identifier = i,
-            #         procedure_description = row[0].value[4:].strip(), # Remove "RCH "
-            #         gross_charge = float(row[1].value),
-            #     )
-
-#from chargemaster_parsers.parsers.sharp import SharpChargeMasterParser
-#SharpChargeMasterParser.find_artifacts()
