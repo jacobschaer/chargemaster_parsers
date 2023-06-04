@@ -45,14 +45,14 @@ def test_simple_row(parser):
             procedure_identifier = 2600001,
             location = 'all',
             procedure_description = "HB IV INFUS HYDRATION 31-60 MIN",
-            gross_charge = float(2161.71),
+            gross_charge = 2161.71,
             in_patient = False
         ),
         ChargeMasterEntry(
             procedure_identifier = 2600001,
             location = 'all',
             procedure_description = "HB IV INFUS HYDRATION 31-60 MIN",
-            gross_charge = float(2811.66),
+            gross_charge = 2811.66,
             in_patient = True,
             cpt_code = 96360,
             hcpcs_code = 96360

@@ -23,7 +23,7 @@ class CedarsSinaiChargeMasterParser:
             op_charge_column = None
             ip_charge_column = None
 
-            for _, row in enumerate(wb.worksheets[0].iter_rows(min_row=5)):
+            for row in wb.worksheets[0].iter_rows(min_row=5):
                 values = []
                 for cell in row[:5]:
                     if type(cell.value) in (int, float):
