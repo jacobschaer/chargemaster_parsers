@@ -39,7 +39,8 @@ class CedarsSinaiChargeMasterParser:
                     charge_code = values[charge_code_column]
                     charge_code_desc = values[charge_code_description_column]
                     charge = values[op_charge_column]
-                    charge = float(charge.replace("$", "").replace(",",""))
+                    if charge is not None:
+                        charge = float(str(charge).replace("$", "").replace(",",""))
 
                     yield ChargeMasterEntry(
                         location = 'all',
@@ -54,7 +55,8 @@ class CedarsSinaiChargeMasterParser:
                         hcpcs_code = values[cpt_hcpcs_code_column]
                         if values[ip_charge_column] != None:
                             charge = values[ip_charge_column]
-                            charge = float(charge.replace("$", "").replace(",",""))
+                            if charge is not None:
+                                charge = float(str(charge).replace("$", "").replace(",",""))
 
                         yield ChargeMasterEntry(
                         location = 'all',
