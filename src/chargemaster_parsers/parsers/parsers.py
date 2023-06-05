@@ -5,8 +5,9 @@ class ChargeMasterParser:
         from .rady import RadyChargeMasterParser
         from .kaiser import KaiserChargeMasterParser
         from .sharp import SharpChargeMasterParser
+        from .cedars_sinai import CedarsSinaiChargeMasterParser
 
-        PARSERS = [UCSDChargeMasterParser, ScrippsChargeMasterParser, RadyChargeMasterParser, KaiserChargeMasterParser, SharpChargeMasterParser]
+        PARSERS = [UCSDChargeMasterParser, ScrippsChargeMasterParser, RadyChargeMasterParser, KaiserChargeMasterParser, SharpChargeMasterParser, CedarsSinaiChargeMasterParser]
 
         for parser_class in PARSERS:
             if institution.lower().strip() == parser_class.INSTITUTION_NAME.lower().strip():
