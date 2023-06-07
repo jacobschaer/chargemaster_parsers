@@ -50,20 +50,29 @@ class CedarsSinaiChargeMasterParser:
                         in_patient = False,
                     )
 
-                    if values[cpt_hcpcs_code_column] != None:
-                        cpt_code = values[cpt_hcpcs_code_column]
-                        hcpcs_code = values[cpt_hcpcs_code_column]
+                    cpt_hcps_code = values[cpt_hcpcs_code_column]
+                    cpt_code = None
+                    hcpcs_code = None
+                    if cpt_hcps_code != None:
+                        if isinstance(cpt_hcps_code, int) and len(str(cpt_hcps_code)) == 5:
+                            cpt_code = cpt_hcps_code
+                        else:
+                            if len(cpt_hcps_code) == 5 and cpt_hcps_code[0].isnumeric():
+                                cpt_code = cpt_hcps_code
+                            else:
+                                hcpcs_code = cpt_hcps_code
+
                         if values[ip_charge_column] != None:
                             charge = values[ip_charge_column]
                             if charge is not None:
                                 charge = float(str(charge).replace("$", "").replace(",",""))
 
                         yield ChargeMasterEntry(
-                        location = 'all',
-                        procedure_identifier = charge_code,
-                        procedure_description = charge_code_desc,
-                        gross_charge = charge,
-                        in_patient = True,
-                        cpt_code = cpt_code,
-                        hcpcs_code = hcpcs_code
-                    )
+                            location = 'all',
+                            procedure_identifier = charge_code,
+                            procedure_description = charge_code_desc,
+                            gross_charge = charge,
+                            in_patient = True,
+                            cpt_code = cpt_code,
+                            hcpcs_code = hcpcs_code
+                        )

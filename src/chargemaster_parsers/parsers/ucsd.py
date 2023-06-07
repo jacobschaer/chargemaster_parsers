@@ -177,4 +177,5 @@ class UCSDChargeMasterParser:
                         payer = payer,
                         plan = plan,
                         gross_charge = gross_charge,
+                        quantity = quantity
                     )

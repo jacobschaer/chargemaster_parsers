@@ -15,7 +15,7 @@ class ChargeMasterParser:
                 return parser_class()
 
 class ChargeMasterEntry:
-    __slots__ = (
+    __slots__ = sorted([
         "location",
         "procedure_identifier",
         "procedure_description",
@@ -31,38 +31,49 @@ class ChargeMasterEntry:
         "payer",
         "plan",
         "gross_charge",
-    )
+
+        # Unused
+        "charge_code",
+        "quantity",
+        "in_patient_price"
+    ])
 
     def __init__(self, **kwargs):
         for key in self.__slots__:
-            setattr(self, key, kwargs.get(key, None))
+            value = None
+            try:
+                value = kwargs.pop(key)
+            except KeyError:
+                pass
+            setattr(self, key, value)
 
     def __eq__(self, other):
-        return self.__dict__() == other.__dict__()
+        return all(map(lambda x: getattr(self, x) == getattr(other, x), self.__slots__))
 
     def __str__(self):
-        return "\n".join([f"{key} : {value}" for key, value in self.__dict__().items()])
+        return "\n".join([f"{key} : {getattr(self, key)}" for key in self.__slots__])
 
-    def __dict__(self):
-        result = {}
+    def __lt__(self, other):
+        for key in self.__slots__:
+            left = getattr(self, key)
+            right = getattr(other, key)
+            if left == right:
+                continue
+            elif left is not None and right is not None:
+                return left < right
+            elif left is None and right is not None:
+                return True
+            else:
+                return False
+
+    def __repr__(self):
+        values = []
         for key in self.__slots__:
             value = getattr(self, key)
             if value is not None:
-                result[key] = value
-        return result
-
-    def __lt__(self, other):
-        self_dict = self.__dict__()
-        other_dict = other.__dict__()
-
-        keys = set(self_dict.keys()) & set(other_dict.keys())
-        for key in keys:
-            a, b = getattr(self, key) , getattr(other, key)
-            if a == b:
-                continue
-            else:
-                return a < b
-        return self_dict.keys() < other_dict.keys()
-
-    def __repr__(self):
-        return str(self.__dict__())
+                if isinstance(value, str):
+                    values.append((key,f"\"{value}\""))
+                else:
+                    values.append((key,value))
+        params = ", ".join([f"{key}={value}" for key, value in values])
+        return f"ChargeMasterEntry({params})"

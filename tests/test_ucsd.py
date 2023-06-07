@@ -65,13 +65,12 @@ def test_ndc(parser):
         ChargeMasterEntry(
             ndc_code = "00121-0657-11",
             hcpcs_code = "00002007",
-            quantity = "10.15 mL",
-            in_patient_price = 7.73,
             procedure_identifier = "100",
             nubc_revenue_code = "0250",
             procedure_description = "ACETAMINOPHEN 160 MG/5ML OR SOLN",
             plan = plan,
             expected_reimbursement = reimbursement,
+            quantity = "10.15 mL",
         )
         for plan, reimbursement in expected_reimbursement.items()
     ]
@@ -175,6 +174,7 @@ def test_hcps(parser):
                 max_reimbursement = 341.67,
                 plan = plan,
                 expected_reimbursement = reimbursement,
+                quantity = "509.96"
         )
         for plan, reimbursement in expected_reimbursement.items()
     ]

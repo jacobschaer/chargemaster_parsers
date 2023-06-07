@@ -12,6 +12,10 @@ class KaiserChargeMasterParser:
     # Note that 941105628 is the Kaiser EIN/TAX ID
     SAN_DIEGO_ARTIFACT_URL = "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-san-diego-medical-center-standard-charges-scal-en.zip"
 
+    _LOCATION_FORMAL_NAMES = {
+        "SanDiego": "San Diego",
+    }
+
     @property
     def institution_name(self):
         return KaiserChargeMasterParser.INSTITUTION_NAME
@@ -23,11 +27,10 @@ class KaiserChargeMasterParser:
     def parse_artifacts(self, artifacts):
         with zipfile.ZipFile(artifacts[KaiserChargeMasterParser.SAN_DIEGO_ARTIFACT_URL]) as zip_file:
             for name in zip_file.namelist():
-                print(name)
                 match = re.match(r"(.+?)Kaiser(.+?)ChargeDescriptionMaster.csv$", name)
                 if match:
-                    print("Yas")
-                    location = match.groups()[1]
+                    location = self._LOCATION_FORMAL_NAMES[match.groups()[1]]
+
                     with zip_file.open(name) as csv_file:
                         for _ in range(4):
                             csv_file.readline()
@@ -77,6 +80,7 @@ class KaiserChargeMasterParser:
                                     elif patient_classification == "OUTPATIENT":
                                         in_patient = False
                                     plan = provider.strip()
+
                                     yield ChargeMasterEntry(
                                         charge_number = charge_number,
                                         procedure_description = procedure_description,

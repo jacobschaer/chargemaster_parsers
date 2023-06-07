@@ -28,7 +28,7 @@ def test_simple_row(parser):
             payer = 'COMMERCIAL',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -36,7 +36,7 @@ def test_simple_row(parser):
             payer = 'COMMERCIAL',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -44,7 +44,7 @@ def test_simple_row(parser):
             payer = 'MEDICAID',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -52,7 +52,7 @@ def test_simple_row(parser):
             payer = 'MEDICAID',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
     ]
 

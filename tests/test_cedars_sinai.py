@@ -55,7 +55,6 @@ def test_simple_row(parser):
             gross_charge = 2811.66,
             in_patient = True,
             cpt_code = 96360,
-            hcpcs_code = 96360
         ),
         ChargeMasterEntry(
             procedure_identifier = 2600017,
@@ -71,7 +70,6 @@ def test_simple_row(parser):
             gross_charge = 844.45,
             in_patient = True,
             cpt_code = 96377,
-            hcpcs_code = 96377
         ),
         ChargeMasterEntry(
             procedure_identifier = 2700005,

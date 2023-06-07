@@ -7,6 +7,13 @@ from .parsers import ChargeMasterEntry
 class SharpChargeMasterParser:
     INSTITUTION_NAME = "Sharp"
 
+    _LOCATION_FORMAL_NAMES = {
+        "grossmont": "Grossmont",
+        "chula-vista": "Chula Vista",
+        "coronado": "Coronado",
+        "memorial": "Memorial", 
+    }
+
     # Sharp kinda sucks - they only give gross/average charges and they spread out
     # their charge masters across a bazillion files with only somewhat deterministic
     # names. So, we just brute forced this list of URL's
@@ -249,7 +256,7 @@ class SharpChargeMasterParser:
             if artifact_url in self.artifact_urls:
                 matcher = self.ARTIFACT_URL_LOCATION_REGEX.match(artifact_url)
                 if matcher:
-                    location = matcher.groups()[0]
+                    location = self._LOCATION_FORMAL_NAMES[matcher.groups()[0]]
                     wb = openpyxl.load_workbook(artifact)
                     charge_code_column, charge_code_description_column, charge_column = None, None, None
                     for i, row in enumerate(wb.worksheets[0].iter_rows()):

@@ -32,13 +32,13 @@ def test_simple_row(parser):
     expected_result = [
         ChargeMasterEntry(
             procedure_identifier = '414300034',
-            location = 'memorial',
+            location = 'Memorial',
             procedure_description = "US BX BREAST INITIAL",
             gross_charge = 6720.0,
         ),
         ChargeMasterEntry(
             procedure_identifier = '414302054',
-            location = 'memorial',
+            location = 'Memorial',
             procedure_description = "PERC BX LYMPH NODE",
             gross_charge = 4442.0,
         )
