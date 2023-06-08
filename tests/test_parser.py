@@ -2,6 +2,8 @@ from chargemaster_parsers.parsers import ChargeMasterEntry, ChargeMasterParser
 
 from chargemaster_parsers.parsers import RadyChargeMasterParser
 
+import pytest
+
 def test_inequality_by_value():
     a = ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -70,3 +72,7 @@ def test_repr():
 
 def test_rady():
     assert isinstance(ChargeMasterParser.build("rady"), RadyChargeMasterParser)
+
+def test_invalid():
+        with pytest.raises(ValueError, match=r"No registered institution matched fake. Choices were.*"):
+            ChargeMasterParser.build("fake")

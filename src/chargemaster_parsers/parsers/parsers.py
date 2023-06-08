@@ -8,8 +8,9 @@ class ChargeMasterParser:
     @classmethod
     def build(cls, institution):
         for candidate_institution in cls.registered_parsers:
-            if candidate_institution.lower() == institution.lower().strip():
-                return cls.registered_parsers[candidate_institution]() 
+            if candidate_institution.lower() == institution.lower():
+                return cls.registered_parsers[candidate_institution]()
+        raise ValueError(f"No registered institution matched {institution}. Choices were {', '.join(cls.registered_parsers)}")
 
 class ChargeMasterEntry:
     __slots__ = sorted([
