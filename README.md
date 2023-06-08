@@ -38,8 +38,13 @@ To utilize the library for a particular institution:
   # Choose your institution
   institution = "scripps"
 
-  # Create a parser for it
-  parser = ChargeMasterParser(institution)
+  # Create a parser for it - either use the factory method and give it an
+  # institution name, or you can import the specific parser subclass you want
+  #
+  # from chargemaster_parsers.parsers import ScrippsChargeMasterParser
+  # parser = ScrippsChargeMasterParser()
+
+  parser = ChargeMasterParser.build(institution)
 
   # Download the artifacts however you see fit - note this way requires a lot of
   # RAM - you will likely need to store them off to disk. For now make a pretend

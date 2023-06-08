@@ -74,5 +74,5 @@ def test_rady():
     assert isinstance(ChargeMasterParser.build("rady"), RadyChargeMasterParser)
 
 def test_invalid():
-        with pytest.raises(ValueError, match=r"No registered institution matched fake. Choices were.*"):
-            ChargeMasterParser.build("fake")
+    with pytest.raises(ValueError, match=r"No registered institution matched fake. Choices were.*"):
+        ChargeMasterParser.build("fake")
