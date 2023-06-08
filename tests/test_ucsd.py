@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.ucsd import UCSDChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import ChargeMasterEntry, UCSDChargeMasterParser
 
 import tempfile
 import json

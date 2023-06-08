@@ -3,9 +3,9 @@ import zipfile
 import io
 import re
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
-class KaiserChargeMasterParser:
+class KaiserChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Kaiser"
     # https://healthy.kaiserpermanente.org/southern-california/doctors-locations/standard-charges
     # For more

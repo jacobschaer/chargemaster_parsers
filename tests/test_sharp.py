@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.sharp import SharpChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import ChargeMasterEntry, SharpChargeMasterParser
 
 import tempfile
 from openpyxl import Workbook

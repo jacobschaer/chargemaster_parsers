@@ -1,10 +1,10 @@
 import re
 import openpyxl
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
 
-class RadyChargeMasterParser:
+class RadyChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Rady"
     ARTIFACT_URL = "https://www.rchsd.org/documents/2022/07/chargemaster-2.xlsx/"
 

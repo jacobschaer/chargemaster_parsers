@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.kaiser import KaiserChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import KaiserChargeMasterParser, ChargeMasterEntry
 
 import tempfile
 import zipfile

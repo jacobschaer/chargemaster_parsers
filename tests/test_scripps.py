@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.scripps import ScrippsChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import ChargeMasterEntry, ScrippsChargeMasterParser
 
 import tempfile
 import json

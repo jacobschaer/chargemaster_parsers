@@ -1,4 +1,6 @@
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import ChargeMasterEntry, ChargeMasterParser
+
+from chargemaster_parsers.parsers import RadyChargeMasterParser
 
 def test_inequality_by_value():
     a = ChargeMasterEntry(
@@ -65,3 +67,6 @@ def test_repr():
         location="San Diego"
     )
     assert repr(a) == 'ChargeMasterEntry(gross_charge=11834.0, location="San Diego", payer="COMMERCIAL", plan="KAISER FOUNDATION HEALTH PLAN, INC.")'
+
+def test_rady():
+    assert isinstance(ChargeMasterParser.build("rady"), RadyChargeMasterParser)

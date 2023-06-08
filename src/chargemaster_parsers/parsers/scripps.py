@@ -2,7 +2,7 @@ import re
 import csv
 import io
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
 NDC_REGEX = r"^(\d{4}-\d{4}-\d{2}|\d{5}-(?:\d{3}-\d{2}|\d{4}-\d{1,2}))"
 NUBC_REV_CODE_REGEX = r'(^[0-9]{4})\s*-\s*'
@@ -12,7 +12,7 @@ CODE_MATCHERS = (
     ("DRG", r"^MS-DRG\s+V[0-9]+\s+\(FY [0-9]+\)\s+(.+?)$")
 )
 
-class ScrippsChargeMasterParser:
+class ScrippsChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Scripps"
     SCRIPPS_GREEN_HOSPITAL_ARTIFACT_URL = "https://apps.scripps.org/pricetransparency/951684089_ScrippsGreenHospital_standardcharges.csv"
     SCRIPPS_MEMORIAL_HOSPITAL_ENCINITAS_ARTIFACT_URL = "https://apps.scripps.org/pricetransparency/951684089_ScrippsMemorialHospitalEncinitas_standardcharges.csv"

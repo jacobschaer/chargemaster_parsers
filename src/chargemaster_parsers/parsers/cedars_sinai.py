@@ -1,8 +1,8 @@
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 import openpyxl
 
 
-class CedarsSinaiChargeMasterParser:
+class CedarsSinaiChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Cedars-Sinai"
     ARTIFACT_URL = "https://www.cedars-sinai.org/content/dam/cedars-sinai/billing-insurance/documents/cedars-sinai-changemaster-july-2022.xlsx"
     

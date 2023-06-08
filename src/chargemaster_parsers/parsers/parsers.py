@@ -1,18 +1,15 @@
 class ChargeMasterParser:
-    def __new__(cls, institution):
-        from .ucsd import UCSDChargeMasterParser
-        from .scripps import ScrippsChargeMasterParser
-        from .rady import RadyChargeMasterParser
-        from .kaiser import KaiserChargeMasterParser
-        from .sharp import SharpChargeMasterParser
-        from .cedars_sinai import CedarsSinaiChargeMasterParser
+    registered_parsers = {}    
 
-        PARSERS = [UCSDChargeMasterParser, ScrippsChargeMasterParser, RadyChargeMasterParser, KaiserChargeMasterParser, SharpChargeMasterParser, CedarsSinaiChargeMasterParser]
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls.registered_parsers[cls.INSTITUTION_NAME.strip()] = cls
 
-        for parser_class in PARSERS:
-            if institution.lower().strip() == parser_class.INSTITUTION_NAME.lower().strip():
-                obj = super().__new__(cls)
-                return parser_class()
+    @classmethod
+    def build(cls, institution):
+        for candidate_institution in cls.registered_parsers:
+            if candidate_institution.lower() == institution.lower().strip():
+                return cls.registered_parsers[candidate_institution]() 
 
 class ChargeMasterEntry:
     __slots__ = sorted([

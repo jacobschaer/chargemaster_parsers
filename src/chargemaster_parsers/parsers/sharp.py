@@ -1,10 +1,10 @@
 import re
 import openpyxl
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
 
-class SharpChargeMasterParser:
+class SharpChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Sharp"
 
     _LOCATION_FORMAL_NAMES = {
