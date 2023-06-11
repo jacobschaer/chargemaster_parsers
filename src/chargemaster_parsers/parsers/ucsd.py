@@ -14,14 +14,7 @@ CODE_MATCHERS = (
 class UCSDChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "UCSD"
     ARTIFACT_URL = "http://hsfiles.ucsd.edu/patientBilling/UC-San-Diego-Standard-Charges-956006144.json"
-
-    @property
-    def institution_name(self):
-        return UCSDChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [UCSDChargeMasterParser.ARTIFACT_URL]
+    ARTIFACT_URLS = (ARTIFACT_URL, )
 
     def parse_artifacts(self, artifacts):
         # What a disaster - instead of being able to just stream the binary contents with json.load as a utf-8

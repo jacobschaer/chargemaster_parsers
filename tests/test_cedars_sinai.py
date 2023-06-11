@@ -87,5 +87,10 @@ def test_simple_row(parser):
     # pprint.pprint(actual_result)
     assert sorted(expected_result) == sorted(actual_result)
 
+def test_institution_name(parser):
+    assert CedarsSinaiChargeMasterParser.institution_name == "Cedars-Sinai"
+    assert parser.institution_name == "Cedars-Sinai"
 
-
+def test_artifact_urls(parser):
+    assert CedarsSinaiChargeMasterParser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS

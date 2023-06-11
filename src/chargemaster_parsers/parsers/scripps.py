@@ -19,20 +19,13 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
     SCRIPPS_MEMORIAL_HOSPITAL_LA_JOLLA_ARTIFACT_URL = "https://apps.scripps.org/pricetransparency/951684089_ScrippsMemorialHospitalLaJolla_standardcharges.csv"
     SCRIPPS_MERCY_HOSPITAL_SAN_DIEGO_ARTIFACT_URL = "https://apps.scripps.org/pricetransparency/951684089_ScrippsMercyHospitalSanDiego_standardcharges.csv"
     SCRIPPS_MERCY_HOSPITAL_CHULA_VISTA_ARTIFACT_URL = "https://apps.scripps.org/pricetransparency/951684089_ScrippsMercyHospitalChulaVista_standardcharges.csv"
-
-    @property
-    def institution_name(self):
-        return ScrippsChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [
-            ScrippsChargeMasterParser.SCRIPPS_GREEN_HOSPITAL_ARTIFACT_URL,
-            ScrippsChargeMasterParser.SCRIPPS_MEMORIAL_HOSPITAL_ENCINITAS_ARTIFACT_URL,
-            ScrippsChargeMasterParser.SCRIPPS_MEMORIAL_HOSPITAL_LA_JOLLA_ARTIFACT_URL,
-            ScrippsChargeMasterParser.SCRIPPS_MERCY_HOSPITAL_SAN_DIEGO_ARTIFACT_URL,
-            ScrippsChargeMasterParser.SCRIPPS_MERCY_HOSPITAL_CHULA_VISTA_ARTIFACT_URL,
-        ]
+    ARTIFACT_URLS =  (
+        SCRIPPS_GREEN_HOSPITAL_ARTIFACT_URL,
+        SCRIPPS_MEMORIAL_HOSPITAL_ENCINITAS_ARTIFACT_URL,
+        SCRIPPS_MEMORIAL_HOSPITAL_LA_JOLLA_ARTIFACT_URL,
+        SCRIPPS_MERCY_HOSPITAL_SAN_DIEGO_ARTIFACT_URL,
+        SCRIPPS_MERCY_HOSPITAL_CHULA_VISTA_ARTIFACT_URL,
+    )
 
     def parse_artifacts(self, artifacts):
         for artifact_url in self.artifact_urls:

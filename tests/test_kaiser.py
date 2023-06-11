@@ -65,3 +65,10 @@ def test_simple_row(parser):
             }))
             assert actual_result == expected_result
 
+def test_institution_name(parser):
+    assert KaiserChargeMasterParser.institution_name == "Kaiser"
+    assert parser.institution_name == "Kaiser"
+
+def test_artifact_urls(parser):
+    assert KaiserChargeMasterParser.artifact_urls == KaiserChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == KaiserChargeMasterParser.ARTIFACT_URLS

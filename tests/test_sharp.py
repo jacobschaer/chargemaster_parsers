@@ -48,3 +48,11 @@ def test_simple_row(parser):
         wb.save(filename)
         actual_result = list(parser.parse_artifacts({"https://www.sharp.com/chargemaster/memorial/upload/SMH3082.xlsx" : open(filename, "rb")}))
     assert sorted(expected_result) == sorted(actual_result)
+
+def test_institution_name(parser):
+    assert SharpChargeMasterParser.institution_name == "Sharp"
+    assert parser.institution_name == "Sharp"
+
+def test_artifact_urls(parser):
+    assert SharpChargeMasterParser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS

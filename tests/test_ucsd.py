@@ -180,3 +180,11 @@ def test_hcps(parser):
 
     actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(row).encode('utf-8'))}))
     assert sorted(expected_result) == sorted(actual_result)
+
+def test_institution_name(parser):
+    assert UCSDChargeMasterParser.institution_name == "UCSD"
+    assert parser.institution_name == "UCSD"
+
+def test_artifact_urls(parser):
+    assert UCSDChargeMasterParser.artifact_urls == UCSDChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == UCSDChargeMasterParser.ARTIFACT_URLS

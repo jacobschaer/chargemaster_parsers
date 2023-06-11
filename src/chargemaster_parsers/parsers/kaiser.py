@@ -11,18 +11,11 @@ class KaiserChargeMasterParser(ChargeMasterParser):
     # For more
     # Note that 941105628 is the Kaiser EIN/TAX ID
     SAN_DIEGO_ARTIFACT_URL = "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-san-diego-medical-center-standard-charges-scal-en.zip"
+    ARTIFACT_URLS = (SAN_DIEGO_ARTIFACT_URL, )
 
     _LOCATION_FORMAL_NAMES = {
         "SanDiego": "San Diego",
     }
-
-    @property
-    def institution_name(self):
-        return KaiserChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [KaiserChargeMasterParser.SAN_DIEGO_ARTIFACT_URL]
 
     def parse_artifacts(self, artifacts):
         with zipfile.ZipFile(artifacts[KaiserChargeMasterParser.SAN_DIEGO_ARTIFACT_URL]) as zip_file:

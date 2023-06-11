@@ -1,9 +1,27 @@
 class ChargeMasterParser:
     registered_parsers = {}    
 
+    # Register imported derived classes - requires Python 3.6+
+    # https://python.readthedocs.io/en/stable/reference/datamodel.html#object.__init_subclass__
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
-        cls.registered_parsers[cls.INSTITUTION_NAME.strip()] = cls
+        cls.registered_parsers[cls.institution_name.strip()] = cls
+
+
+    # Requries Python 3.9+ to nest classmethod and property
+    # https://docs.python.org/3.11/library/functions.html#classmethod
+    @classmethod
+    @property
+    def institution_name(cls):
+        return cls.INSTITUTION_NAME
+
+    @classmethod
+    @property
+    def artifact_urls(cls):
+        return cls.ARTIFACT_URLS
+
+    def parse_artifacts(self, artifacts):
+        raise NotImplemented("Only implemented on derived classes.")
 
     @classmethod
     def build(cls, institution):

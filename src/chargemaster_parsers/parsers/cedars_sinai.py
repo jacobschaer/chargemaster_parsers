@@ -5,15 +5,8 @@ import openpyxl
 class CedarsSinaiChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Cedars-Sinai"
     ARTIFACT_URL = "https://www.cedars-sinai.org/content/dam/cedars-sinai/billing-insurance/documents/cedars-sinai-changemaster-july-2022.xlsx"
-    
-    @property
-    def institution_name(self):
-        return CedarsSinaiChargeMasterParser.INSTITUTION_NAME
-    
-    @property
-    def artifact_urls(self):
-        return [CedarsSinaiChargeMasterParser.ARTIFACT_URL]
-    
+    ARTIFACT_URLS = (ARTIFACT_URL, )
+   
     def parse_artifacts(self, artifacts):
         for artifact_url, artifact in artifacts.items():
             wb = openpyxl.load_workbook(artifact)

@@ -117,3 +117,10 @@ def test_ms_drg(parser):
     }))
     assert sorted(expected_result) == sorted(actual_result)
 
+def test_institution_name(parser):
+    assert ScrippsChargeMasterParser.institution_name == "Scripps"
+    assert parser.institution_name == "Scripps"
+
+def test_artifact_urls(parser):
+    assert ScrippsChargeMasterParser.artifact_urls == ScrippsChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == ScrippsChargeMasterParser.ARTIFACT_URLS

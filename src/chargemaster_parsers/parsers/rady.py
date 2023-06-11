@@ -7,14 +7,7 @@ from .parsers import ChargeMasterEntry, ChargeMasterParser
 class RadyChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Rady"
     ARTIFACT_URL = "https://www.rchsd.org/documents/2022/07/chargemaster-2.xlsx/"
-
-    @property
-    def institution_name(self):
-        return RadyChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [RadyChargeMasterParser.ARTIFACT_URL]
+    ARTIFACT_URLS = (ARTIFACT_URL, )
 
     def parse_artifacts(self, artifacts):
         wb = openpyxl.load_workbook(artifacts[RadyChargeMasterParser.ARTIFACT_URL])
