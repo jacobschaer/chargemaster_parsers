@@ -1,21 +1,37 @@
 class ChargeMasterParser:
-    def __new__(cls, institution):
-        from .ucsd import UCSDChargeMasterParser
-        from .scripps import ScrippsChargeMasterParser
-        from .rady import RadyChargeMasterParser
-        from .kaiser import KaiserChargeMasterParser
-        from .sharp import SharpChargeMasterParser
-        from .cedars_sinai import CedarsSinaiChargeMasterParser
+    registered_parsers = {}    
 
-        PARSERS = [UCSDChargeMasterParser, ScrippsChargeMasterParser, RadyChargeMasterParser, KaiserChargeMasterParser, SharpChargeMasterParser, CedarsSinaiChargeMasterParser]
+    # Register imported derived classes - requires Python 3.6+
+    # https://python.readthedocs.io/en/stable/reference/datamodel.html#object.__init_subclass__
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        cls.registered_parsers[cls.institution_name.strip()] = cls
 
-        for parser_class in PARSERS:
-            if institution.lower().strip() == parser_class.INSTITUTION_NAME.lower().strip():
-                obj = super().__new__(cls)
-                return parser_class()
+
+    # Requries Python 3.9+ to nest classmethod and property
+    # https://docs.python.org/3.11/library/functions.html#classmethod
+    @classmethod
+    @property
+    def institution_name(cls):
+        return cls.INSTITUTION_NAME
+
+    @classmethod
+    @property
+    def artifact_urls(cls):
+        return cls.ARTIFACT_URLS
+
+    def parse_artifacts(self, artifacts):
+        raise NotImplemented("Only implemented on derived classes.")
+
+    @classmethod
+    def build(cls, institution):
+        for candidate_institution in cls.registered_parsers:
+            if candidate_institution.lower() == institution.lower():
+                return cls.registered_parsers[candidate_institution]()
+        raise ValueError(f"No registered institution matched {institution}. Choices were {', '.join(cls.registered_parsers)}")
 
 class ChargeMasterEntry:
-    __slots__ = (
+    __slots__ = sorted([
         "location",
         "procedure_identifier",
         "procedure_description",
@@ -31,38 +47,49 @@ class ChargeMasterEntry:
         "payer",
         "plan",
         "gross_charge",
-    )
+
+        # Unused
+        "charge_code",
+        "quantity",
+        "in_patient_price"
+    ])
 
     def __init__(self, **kwargs):
         for key in self.__slots__:
-            setattr(self, key, kwargs.get(key, None))
+            value = None
+            try:
+                value = kwargs.pop(key)
+            except KeyError:
+                pass
+            setattr(self, key, value)
 
     def __eq__(self, other):
-        return self.__dict__() == other.__dict__()
+        return all(map(lambda x: getattr(self, x) == getattr(other, x), self.__slots__))
 
     def __str__(self):
-        return "\n".join([f"{key} : {value}" for key, value in self.__dict__().items()])
+        return "\n".join([f"{key} : {getattr(self, key)}" for key in self.__slots__])
 
-    def __dict__(self):
-        result = {}
+    def __lt__(self, other):
+        for key in self.__slots__:
+            left = getattr(self, key)
+            right = getattr(other, key)
+            if left == right:
+                continue
+            elif left is not None and right is not None:
+                return left < right
+            elif left is None and right is not None:
+                return True
+            else:
+                return False
+
+    def __repr__(self):
+        values = []
         for key in self.__slots__:
             value = getattr(self, key)
             if value is not None:
-                result[key] = value
-        return result
-
-    def __lt__(self, other):
-        self_dict = self.__dict__()
-        other_dict = other.__dict__()
-
-        keys = set(self_dict.keys()) & set(other_dict.keys())
-        for key in keys:
-            a, b = getattr(self, key) , getattr(other, key)
-            if a == b:
-                continue
-            else:
-                return a < b
-        return self_dict.keys() < other_dict.keys()
-
-    def __repr__(self):
-        return str(self.__dict__())
+                if isinstance(value, str):
+                    values.append((key,f"\"{value}\""))
+                else:
+                    values.append((key,value))
+        params = ", ".join([f"{key}={value}" for key, value in values])
+        return f"ChargeMasterEntry({params})"

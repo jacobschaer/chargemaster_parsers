@@ -1,7 +1,7 @@
 import re
 import json
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
 NDC_REGEX = r"^(\d{4}-\d{4}-\d{2}|\d{5}-(?:\d{3}-\d{2}|\d{4}-\d{1,2}))"
 NUBC_REV_CODE_REGEX = r'(^[0-9]{4})\s*-\s*'
@@ -11,17 +11,10 @@ CODE_MATCHERS = (
     ("DRG", r"^MS-DRG\s+V[0-9]+\s+\(FY [0-9]+\)\s+(.+?)$")
 )
 
-class UCSDChargeMasterParser:
+class UCSDChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "UCSD"
     ARTIFACT_URL = "http://hsfiles.ucsd.edu/patientBilling/UC-San-Diego-Standard-Charges-956006144.json"
-
-    @property
-    def institution_name(self):
-        return UCSDChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [UCSDChargeMasterParser.ARTIFACT_URL]
+    ARTIFACT_URLS = (ARTIFACT_URL, )
 
     def parse_artifacts(self, artifacts):
         # What a disaster - instead of being able to just stream the binary contents with json.load as a utf-8
@@ -177,4 +170,5 @@ class UCSDChargeMasterParser:
                         payer = payer,
                         plan = plan,
                         gross_charge = gross_charge,
+                        quantity = quantity
                     )

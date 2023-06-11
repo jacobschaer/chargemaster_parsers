@@ -55,7 +55,6 @@ def test_simple_row(parser):
             gross_charge = 2811.66,
             in_patient = True,
             cpt_code = 96360,
-            hcpcs_code = 96360
         ),
         ChargeMasterEntry(
             procedure_identifier = 2600017,
@@ -71,7 +70,6 @@ def test_simple_row(parser):
             gross_charge = 844.45,
             in_patient = True,
             cpt_code = 96377,
-            hcpcs_code = 96377
         ),
         ChargeMasterEntry(
             procedure_identifier = 2700005,
@@ -89,5 +87,10 @@ def test_simple_row(parser):
     # pprint.pprint(actual_result)
     assert sorted(expected_result) == sorted(actual_result)
 
+def test_institution_name(parser):
+    assert CedarsSinaiChargeMasterParser.institution_name == "Cedars-Sinai"
+    assert parser.institution_name == "Cedars-Sinai"
 
-
+def test_artifact_urls(parser):
+    assert CedarsSinaiChargeMasterParser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS

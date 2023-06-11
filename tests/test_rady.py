@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.rady import RadyChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import RadyChargeMasterParser, ChargeMasterEntry
 
 import tempfile
 from openpyxl import Workbook
@@ -40,3 +39,11 @@ def test_simple_row(parser):
         wb.save(filename)
         actual_result = list(parser.parse_artifacts({RadyChargeMasterParser.ARTIFACT_URL : open(filename, "rb")}))
     assert sorted(expected_result) == sorted(actual_result)
+
+def test_institution_name(parser):
+    assert RadyChargeMasterParser.institution_name == "Rady"
+    assert parser.institution_name == "Rady"
+
+def test_artifact_urls(parser):
+    assert RadyChargeMasterParser.artifact_urls == RadyChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == RadyChargeMasterParser.ARTIFACT_URLS

@@ -3,31 +3,27 @@ import zipfile
 import io
 import re
 
-from .parsers import ChargeMasterEntry
+from .parsers import ChargeMasterEntry, ChargeMasterParser
 
-class KaiserChargeMasterParser:
+class KaiserChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Kaiser"
     # https://healthy.kaiserpermanente.org/southern-california/doctors-locations/standard-charges
     # For more
     # Note that 941105628 is the Kaiser EIN/TAX ID
     SAN_DIEGO_ARTIFACT_URL = "https://healthy.kaiserpermanente.org/content/dam/kporg/final/documents/health-plan-documents/coverage-information/machine-readable/941105628-san-diego-medical-center-standard-charges-scal-en.zip"
+    ARTIFACT_URLS = (SAN_DIEGO_ARTIFACT_URL, )
 
-    @property
-    def institution_name(self):
-        return KaiserChargeMasterParser.INSTITUTION_NAME
-
-    @property
-    def artifact_urls(self):
-        return [KaiserChargeMasterParser.SAN_DIEGO_ARTIFACT_URL]
+    _LOCATION_FORMAL_NAMES = {
+        "SanDiego": "San Diego",
+    }
 
     def parse_artifacts(self, artifacts):
         with zipfile.ZipFile(artifacts[KaiserChargeMasterParser.SAN_DIEGO_ARTIFACT_URL]) as zip_file:
             for name in zip_file.namelist():
-                print(name)
                 match = re.match(r"(.+?)Kaiser(.+?)ChargeDescriptionMaster.csv$", name)
                 if match:
-                    print("Yas")
-                    location = match.groups()[1]
+                    location = self._LOCATION_FORMAL_NAMES[match.groups()[1]]
+
                     with zip_file.open(name) as csv_file:
                         for _ in range(4):
                             csv_file.readline()
@@ -77,6 +73,7 @@ class KaiserChargeMasterParser:
                                     elif patient_classification == "OUTPATIENT":
                                         in_patient = False
                                     plan = provider.strip()
+
                                     yield ChargeMasterEntry(
                                         charge_number = charge_number,
                                         procedure_description = procedure_description,

@@ -5,6 +5,9 @@ Healthcare Chargemaster Parsers
 The primary objective for now is to process (where available) the outpatient data from chargemasters for healthcare institutions in California.
 The output should be a collection of objects with a common interface to simplify bulk processing.
 
+# Requirements
+Python 3.9+
+
 # Running Unit tests
 Unit tests are implemented in pytest and are located in the src/tests directory.
 To run, you must first create a virtual environment and install the package (preferably in editable mode for local testing).
@@ -38,8 +41,13 @@ To utilize the library for a particular institution:
   # Choose your institution
   institution = "scripps"
 
-  # Create a parser for it
-  parser = ChargeMasterParser(institution)
+  # Create a parser for it - either use the factory method and give it an
+  # institution name, or you can import the specific parser subclass you want
+  #
+  # from chargemaster_parsers.parsers import ScrippsChargeMasterParser
+  # parser = ScrippsChargeMasterParser()
+
+  parser = ChargeMasterParser.build(institution)
 
   # Download the artifacts however you see fit - note this way requires a lot of
   # RAM - you will likely need to store them off to disk. For now make a pretend

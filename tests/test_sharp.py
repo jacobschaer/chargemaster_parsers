@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.sharp import SharpChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import ChargeMasterEntry, SharpChargeMasterParser
 
 import tempfile
 from openpyxl import Workbook
@@ -32,13 +31,13 @@ def test_simple_row(parser):
     expected_result = [
         ChargeMasterEntry(
             procedure_identifier = '414300034',
-            location = 'memorial',
+            location = 'Memorial',
             procedure_description = "US BX BREAST INITIAL",
             gross_charge = 6720.0,
         ),
         ChargeMasterEntry(
             procedure_identifier = '414302054',
-            location = 'memorial',
+            location = 'Memorial',
             procedure_description = "PERC BX LYMPH NODE",
             gross_charge = 4442.0,
         )
@@ -49,3 +48,11 @@ def test_simple_row(parser):
         wb.save(filename)
         actual_result = list(parser.parse_artifacts({"https://www.sharp.com/chargemaster/memorial/upload/SMH3082.xlsx" : open(filename, "rb")}))
     assert sorted(expected_result) == sorted(actual_result)
+
+def test_institution_name(parser):
+    assert SharpChargeMasterParser.institution_name == "Sharp"
+    assert parser.institution_name == "Sharp"
+
+def test_artifact_urls(parser):
+    assert SharpChargeMasterParser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS

@@ -1,5 +1,4 @@
-from chargemaster_parsers.parsers.kaiser import KaiserChargeMasterParser
-from chargemaster_parsers.parsers import ChargeMasterEntry
+from chargemaster_parsers.parsers import KaiserChargeMasterParser, ChargeMasterEntry
 
 import tempfile
 import zipfile
@@ -28,7 +27,7 @@ def test_simple_row(parser):
             payer = 'COMMERCIAL',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -36,7 +35,7 @@ def test_simple_row(parser):
             payer = 'COMMERCIAL',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -44,7 +43,7 @@ def test_simple_row(parser):
             payer = 'MEDICAID',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
         ChargeMasterEntry(
             procedure_description = "ROOM & BOARD-CCU",
@@ -52,7 +51,7 @@ def test_simple_row(parser):
             payer = 'MEDICAID',
             plan = 'KAISER FOUNDATION HEALTH PLAN, INC.',
             gross_charge = 11834.0,
-            location="SanDiego"
+            location="San Diego"
         ),
     ]
 
@@ -66,3 +65,10 @@ def test_simple_row(parser):
             }))
             assert actual_result == expected_result
 
+def test_institution_name(parser):
+    assert KaiserChargeMasterParser.institution_name == "Kaiser"
+    assert parser.institution_name == "Kaiser"
+
+def test_artifact_urls(parser):
+    assert KaiserChargeMasterParser.artifact_urls == KaiserChargeMasterParser.ARTIFACT_URLS
+    assert parser.artifact_urls == KaiserChargeMasterParser.ARTIFACT_URLS
