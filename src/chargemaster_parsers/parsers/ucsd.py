@@ -63,6 +63,11 @@ class UCSDChargeMasterParser(ChargeMasterParser):
             except (KeyError, ValueError, TypeError):
                 pass
 
+            if min_reimbursement and max_reimbursement:
+                # Handle case where they're swapped for.. who knows what reason
+                min_reimbursement, max_reimbursement = sorted((min_reimbursement, max_reimbursement))
+
+
             try:
                 # This should only occur when "Code Type" == "ERX"
                 ndc = filtered_row.pop('NDC')
