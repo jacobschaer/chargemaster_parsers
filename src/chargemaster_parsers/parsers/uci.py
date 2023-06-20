@@ -27,7 +27,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                         for entry in entries:
                             procedure_identifier = entry.get("Itemcode", None) 
                             procedure_description = entry.get("Description", None)
-                            hcpcs_code = int(entry.get("CDM HCPCS", None))
+                            hcpcs_code = entry.get("CDM HCPCS", None)
                             uci_hb_full_price = entry.get("UCI HB OUTPATIENT", None)
                             cash_price = entry.get("UCI HB OUTPATIENT Discount Cash Price", None)
 
@@ -36,7 +36,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                     location = 'standard',
                                     procedure_identifier = procedure_identifier,
                                     procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
+                                    hcpcs_code = int(hcpcs_code),
                                     in_patient = False,
                                     payer = 'UCI HB',
                                     gross_charge = float(uci_hb_full_price.replace(',', '')))
@@ -46,7 +46,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                     location = 'standard',
                                     procedure_identifier = procedure_identifier,
                                     procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
+                                    hcpcs_code = int(hcpcs_code),
                                     in_patient = False,
                                     payer = 'Cash',
                                     gross_charge = float(cash_price.replace(',', '')))
