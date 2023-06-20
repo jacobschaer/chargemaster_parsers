@@ -27,7 +27,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                         for entry in entries:
                             procedure_identifier = entry.get("Itemcode", None) 
                             procedure_description = entry.get("Description", None)
-                            hcpcs_code = entry.get("CDM HCPCS", None)
+                            hcpcs_code = int(entry.get("CDM HCPCS", None))
                             uci_hb_full_price = entry.get("UCI HB OUTPATIENT", None)
                             cash_price = entry.get("UCI HB OUTPATIENT Discount Cash Price", None)
 
@@ -39,7 +39,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                     hcpcs_code = hcpcs_code,
                                     in_patient = False,
                                     payer = 'UCI HB',
-                                    gross_charge = uci_hb_full_price.replace(',', ''))
+                                    gross_charge = float(uci_hb_full_price.replace(',', '')))
                                 
                             if cash_price != 'N/A':
                                 yield ChargeMasterEntry(
@@ -49,5 +49,5 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                     hcpcs_code = hcpcs_code,
                                     in_patient = False,
                                     payer = 'Cash',
-                                    gross_charge = cash_price.replace(',', ''))
+                                    gross_charge = float(cash_price.replace(',', '')))
         
