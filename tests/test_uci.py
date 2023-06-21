@@ -2,7 +2,6 @@ from chargemaster_parsers.parsers.uci import UCIChargeMasterParser
 from chargemaster_parsers.parsers import ChargeMasterEntry
 
 import pytest
-import requests
 import json
 import io
 import pprint
