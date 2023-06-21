@@ -31,7 +31,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                             uci_hb_full_price = entry.get("UCI HB OUTPATIENT", None)
                             cash_price = entry.get("UCI HB OUTPATIENT Discount Cash Price", None)
 
-                            if uci_hb_full_price != 'N/A':
+                            if uci_hb_full_price != 'N/A': # add UCI HB payer entry only if there's a price listed
                                 yield ChargeMasterEntry(
                                     location = 'standard',
                                     procedure_identifier = procedure_identifier,
@@ -41,7 +41,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                     payer = 'UCI HB',
                                     gross_charge = float(uci_hb_full_price.replace(',', '')))
                                 
-                            if cash_price != 'N/A':
+                            if cash_price != 'N/A': # add cash payer entry only if there's a price listed
                                 yield ChargeMasterEntry(
                                     location = 'standard',
                                     procedure_identifier = procedure_identifier,
