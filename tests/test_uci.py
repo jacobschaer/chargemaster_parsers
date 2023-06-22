@@ -4,13 +4,15 @@ from chargemaster_parsers.parsers import ChargeMasterEntry
 import pytest
 import json
 import io
-import pprint
 
-pp = pprint.PrettyPrinter()
 
 @pytest.fixture
 def parser():
     yield UCIChargeMasterParser()
+
+def test_institution_name(parser):
+    assert parser.institution_name == "UCI"
+    assert UCIChargeMasterParser.INSTITUTION_NAME == 'UCI'
 
 def test_gross_charge_entry(parser):
     row = {
@@ -48,20 +50,18 @@ def test_gross_charge_entry(parser):
 
     expected_result = [
         ChargeMasterEntry(
-            location = 'standard',
             procedure_identifier = '00000001_7143',
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
-            hcpcs_code = 10021,
+            hcpcs_code = '10021',
             in_patient = False,
             payer = 'UCI HB',
             gross_charge = 532.00
         ), 
     
         ChargeMasterEntry(
-            location = 'standard',
             procedure_identifier = '00000001_7143',
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
-            hcpcs_code = 10021,
+            hcpcs_code = '10021',
             in_patient = False,
             payer = 'Cash',
             gross_charge = 212.8
