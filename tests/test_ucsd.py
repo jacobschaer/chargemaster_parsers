@@ -74,9 +74,6 @@ def test_ndc(parser):
     ]
 
     actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(row).encode('utf-8'))}))
-    print(sorted(expected_result)[0])
-    print("----")
-    print(sorted(actual_result)[0])
     assert sorted(expected_result) == sorted(actual_result)
 
 def test_bad_quote_and_null(parser):
@@ -398,9 +395,6 @@ def test_ct_scan(parser):
     ]
 
     actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(row.encode())}))
-    import pprint
-    pprint.pprint({x.plan : x.expected_reimbursement for x in expected_result})
-
     assert sorted(expected_result)[0] == sorted(actual_result)[0]
 
 def test_institution_name(parser):

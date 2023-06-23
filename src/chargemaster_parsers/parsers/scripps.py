@@ -40,8 +40,6 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                 cpt_code = None
                 hcpcs_code = None
                 ms_drg_code = None
-                max_reimbursement = None
-                min_reimbursement = None
                 expected_reimbursement = None
                 in_patient = None
                 payer = None
@@ -52,6 +50,10 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                 gross_charges_inpatient = None
                 expected_inpatient_reimbursement = None
                 expected_outpatient_reimbursement = None
+                min_inpatient_reimbursement = None
+                max_inpatient_reimbursement = None
+                min_outpatient_reimbursement = None
+                max_outpatient_reimbursement = None
 
                 location = row["LOCATION"].strip()
                 procedure_identifier = row["PROCEDURE CODE"]
@@ -88,6 +90,26 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                 except ValueError:
                     pass
 
+                try:
+                    min_inpatient_reimbursement = float(row["IP_MIN"])
+                except ValueError:
+                    pass
+
+                try:
+                    max_inpatient_reimbursement = float(row["IP_MAX"])
+                except ValueError:
+                    pass
+
+                try:
+                    min_outpatient_reimbursement = float(row["OP_MIN"])
+                except ValueError:
+                    pass
+
+                try:
+                    max_outpatient_reimbursement = float(row["OP_MAX"])
+                except ValueError:
+                    pass
+
                 # Every line references cash but make sure to only yield it once
                 if procedure_identifier not in cash_procedures_yielded and cash is not None:
                     yield ChargeMasterEntry(
@@ -99,9 +121,6 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                             cpt_code = cpt_code,
                             hcpcs_code = hcpcs_code,
                             ms_drg_code = ms_drg_code,
-                            max_reimbursement = max_reimbursement,
-                            min_reimbursement = min_reimbursement,
-                            expected_reimbursement = expected_inpatient_reimbursement,
                             in_patient = True,
                             payer = "Cash",
                             gross_charge = cash,
@@ -119,8 +138,8 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                             cpt_code = cpt_code,
                             hcpcs_code = hcpcs_code,
                             ms_drg_code = ms_drg_code,
-                            max_reimbursement = max_reimbursement,
-                            min_reimbursement = min_reimbursement,
+                            max_reimbursement = max_inpatient_reimbursement,
+                            min_reimbursement = min_inpatient_reimbursement,
                             expected_reimbursement = expected_inpatient_reimbursement,
                             in_patient = True,
                             payer = payer,
@@ -137,8 +156,8 @@ class ScrippsChargeMasterParser(ChargeMasterParser):
                             cpt_code = cpt_code,
                             hcpcs_code = hcpcs_code,
                             ms_drg_code = ms_drg_code,
-                            max_reimbursement = max_reimbursement,
-                            min_reimbursement = min_reimbursement,
+                            max_reimbursement = max_outpatient_reimbursement,
+                            min_reimbursement = min_outpatient_reimbursement,
                             expected_reimbursement = expected_outpatient_reimbursement,
                             in_patient = False,
                             payer = payer,

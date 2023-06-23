@@ -42,6 +42,9 @@ def test_not_ms_drg(parser):
             plan = 'AETNA MEDI-CAL BETTER HEALTH OF CA',
             gross_charge = 10626.0,
             expected_reimbursement = 0.0,
+            max_reimbursement = 10626.00,
+            min_reimbursement = 1381.38
+
         ),
     ]
 
@@ -52,8 +55,6 @@ def test_not_ms_drg(parser):
         ScrippsChargeMasterParser.SCRIPPS_MERCY_HOSPITAL_SAN_DIEGO_ARTIFACT_URL: io.BytesIO(),
         ScrippsChargeMasterParser.SCRIPPS_MERCY_HOSPITAL_CHULA_VISTA_ARTIFACT_URL: io.BytesIO(),
     }))
-    #import pprint
-    #pprint.pprint(actual_result)
     assert sorted(expected_result) == sorted(actual_result)
 
 
@@ -74,7 +75,9 @@ def test_ms_drg(parser):
             in_patient = True,
             payer = 'AETNA MEDI-CAL',
             plan = 'AETNA MEDI-CAL BETTER HEALTH OF CA',
-            gross_charge = 105058.34
+            gross_charge = 105058.34,
+            max_reimbursement=101685.89,
+            min_reimbursement=9000.0,
         ),
         ChargeMasterEntry(
             procedure_identifier = 'MS940',
@@ -84,7 +87,9 @@ def test_ms_drg(parser):
             in_patient = True,
             payer = 'AETNA MEDI-CAL',
             plan = 'AETNA MEDI-CAL HMO - HEALTH EXCEL IPA',
-            gross_charge = 105058.34
+            gross_charge = 105058.34,
+            max_reimbursement=101685.89,
+            min_reimbursement=9000.0,
         ),
         ChargeMasterEntry(
             procedure_identifier = 'MS940',
@@ -95,7 +100,9 @@ def test_ms_drg(parser):
             payer = 'AETNA MEDICARE ADVANTAGE',
             plan = 'AETNA MCR ADV HMO - HEALTH EXCEL IPA',
             expected_reimbursement = 18463.8,
-            gross_charge = 105058.34
+            gross_charge = 105058.34,
+            max_reimbursement=101685.89,
+            min_reimbursement=9000.0,
         ),
         ChargeMasterEntry(
             procedure_identifier = 'MS940',

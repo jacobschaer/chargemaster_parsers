@@ -88,7 +88,7 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                     yield ChargeMasterEntry(
                         procedure_identifier = procedure_identifier,
                         procedure_description = procedure_description,
-                        gross_charge = gross_charge,
+                        gross_charge = cash_price,
                         cpt_code = cpt_code,
                         hcpcs_code = hcpcs_code,
                         payer = "Cash",
