@@ -27,7 +27,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                 yield ChargeMasterEntry(
                                     procedure_identifier = procedure_identifier,
                                     procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
+                                    hcpcs_code = hcpcs_code.strip(),
                                     in_patient = False,
                                     payer = 'UCI HB',
                                     gross_charge = float(uci_hb_full_price.replace(',', '')))
@@ -36,7 +36,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                 yield ChargeMasterEntry(
                                     procedure_identifier = procedure_identifier,
                                     procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
+                                    hcpcs_code = hcpcs_code.strip(),
                                     in_patient = False,
                                     payer = 'Cash',
                                     gross_charge = float(cash_price.replace(',', '')))
