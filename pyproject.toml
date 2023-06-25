@@ -4,9 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "chargemaster_parsers"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
-  { name="Jaocb Schaer" },
+  { name="Jacob Schaer" },
+  { name="Yvonne Kaire" }
 ]
 description = "A library for parsing machine readable healthcare chargemasters"
 readme = "README.md"

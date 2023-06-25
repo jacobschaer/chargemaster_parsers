@@ -59,7 +59,6 @@ def test_ndc(parser):
         'AETNA PRIMECARE MED GROUP': 1.22
     }
 
-
     expected_result = [
         ChargeMasterEntry(
             ndc_code = "00121-0657-11",
@@ -180,6 +179,223 @@ def test_hcps(parser):
 
     actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(row).encode('utf-8'))}))
     assert sorted(expected_result) == sorted(actual_result)
+
+def test_rev_code_is_description(parser):
+    row = """[{
+        "PROCEDURE": "00004475",
+        "CODE_TYPE": "EAP",
+        "CODE": "CPT® 76499",
+        "NDC": "0320 - RADIOLOGY - DIAGNOSTIC - GENERAL CLASSIFICATION",
+        "REV_CODE": "Dual-energy Xray absorptiometry not otherwise specified for research only",
+        "PROCEDURE_DESCRIPTION": "1",
+        "QUANTITY": "84",
+        "OP_PRICE": "0",
+        "REIMB_MIN": "75.599999999999994",
+        "REIMB_MAX": "42.63",
+        "AETNA BEHAVIORIAL HEALTH ": "42.63",
+        "AETNA MANAGED CHOICE ; AETNA UNLISTED PPO ; GEHA PO BOX 981707 ; MERITAIN HEALTH PO BOX 27267 ; MERITAIN HEALTH PO BOX 853921 ; AETNA CHOICE POS II ": "49.73",
+        "AFFORDABLE HEALTH ; ANTHEM BLUE CROSS PPO PRUDENT BUYER ; BLUE CROSS HMO UNLISTED IPA ; BLUE CROSS SCRIPPS COASTAL ; BLUE CROSS OUT OF STATE BC/BS ; FEDERAL EMPLOYEES  - FEP ; SCRIPPS HEALTH COMP ; ANTHEM BLUE CROSS EPO ; BLUE CROSS  IMPERIAL COUNTY MED G": "75.599999999999994",
+        "ANTHEM BLUE CROSS BH ": "37.04",
+        "BLUE CROSS HOUSE STAFF PRUDENT BUYER ": "37.04",
+        "BLUE CROSS UC CARE ": "42.25",
+        "BLUE SHIELD COVERED CALIFORNIA PPO ": "56.03",
+        "BLUE SHIELD HMO UNLISTED IPA ; BLUE SHIELD IMPERIAL COUNTY MED GRP ": "0",
+        "BLUE SHIELD MHSA BH ": "54.18",
+        "BLUE SHIELD OUT OF STATE BC/BS ; BLUE SHIELD PPO ": "47.71",
+        "CIGNA PPO PO BOX 182223 ; GREAT WEST PPO ; CIGNA UNLISTED PPO ; CIGNA PPO PO BOX 188061 ": "Not Reimbursed Separately",
+        "HEALTH NET COVERED CA PPO ": "59.72",
+        "HEALTH NET PPO ; HEALTH NET HMO UNLISTED IPA ; HEALTH NET COVERED CALIFORNIA PCAMG ; HEALTH NET COVERED CA HMO DIRECT NETWORK ": "56.28",
+        "KAISER NORTH ; KAISER SOUTH ": "Variable",
+        "KAISER RAD ONC ": "58.8",
+        "OPTUM EAP & BH ": "41.24",
+        "OPTUM TRANSPLANT ": "55.1",
+        "SHARP HEALTH PLAN SCMG ; SHARP HEALTH PLAN GRAYBILL MED GRP ; SHARP HEALTH PLAN SHARP REES STEALY ": "42",
+        "STUDENT RESOURCES ; UHC UNLISTED PPO ; UHC PPO ATLANTA GA ; UHC PPO SALT LAKE CITY UT ; UMR - PO BOX 30541 SALT LAKE CITY ": "10.08",
+        "UC MC CC33D5SKQ ": "42",
+        "UC MC HBGHFZ ; UC MC HBGJBI ": "37.880000000000003",
+        "UCSD STUDENT HEALTH ": "Variable",
+        "UHC NAVIGATE ": "38.799999999999997",
+        "UHC PPO QUALCOMM ": "39.79",
+        "UHC WEST MERCY PHY MED GRP ; UHC WEST SHARP REES STEALY ; UHC WEST SHARP COMMUNITY MED GRP ": "Not Reimbursed Separately",
+        "UNLISTED HMO NON CONTRACTED ; UNLISTED PPO NON CONTRACTED ": null
+    }]"""
+
+    expected_reimbursement = {'AETNA BEHAVIORIAL HEALTH': 42.63,
+         'AETNA CHOICE POS II': 49.73,
+         'AETNA MANAGED CHOICE': 49.73,
+         'AETNA UNLISTED PPO': 49.73,
+         'AFFORDABLE HEALTH': 75.6,
+         'ANTHEM BLUE CROSS BH': 37.04,
+         'ANTHEM BLUE CROSS EPO': 75.6,
+         'ANTHEM BLUE CROSS PPO PRUDENT BUYER': 75.6,
+         'BLUE CROSS  IMPERIAL COUNTY MED G': 75.6,
+         'BLUE CROSS HMO UNLISTED IPA': 75.6,
+         'BLUE CROSS HOUSE STAFF PRUDENT BUYER': 37.04,
+         'BLUE CROSS OUT OF STATE BC/BS': 75.6,
+         'BLUE CROSS SCRIPPS COASTAL': 75.6,
+         'BLUE CROSS UC CARE': 42.25,
+         'BLUE SHIELD COVERED CALIFORNIA PPO': 56.03,
+         'BLUE SHIELD HMO UNLISTED IPA': 0.0,
+         'BLUE SHIELD IMPERIAL COUNTY MED GRP': 0.0,
+         'BLUE SHIELD MHSA BH': 54.18,
+         'BLUE SHIELD OUT OF STATE BC/BS': 47.71,
+         'BLUE SHIELD PPO': 47.71,
+         'FEDERAL EMPLOYEES  - FEP': 75.6,
+         'GEHA PO BOX 981707': 49.73,
+         'HEALTH NET COVERED CA HMO DIRECT NETWORK': 56.28,
+         'HEALTH NET COVERED CA PPO': 59.72,
+         'HEALTH NET COVERED CALIFORNIA PCAMG': 56.28,
+         'HEALTH NET HMO UNLISTED IPA': 56.28,
+         'HEALTH NET PPO': 56.28,
+         'KAISER RAD ONC': 58.8,
+         'MERITAIN HEALTH PO BOX 27267': 49.73,
+         'MERITAIN HEALTH PO BOX 853921': 49.73,
+         'OPTUM EAP & BH': 41.24,
+         'OPTUM TRANSPLANT': 55.1,
+         'OP PRICE': 0.0,
+         'SCRIPPS HEALTH COMP': 75.6,
+         'SHARP HEALTH PLAN GRAYBILL MED GRP': 42.0,
+         'SHARP HEALTH PLAN SCMG': 42.0,
+         'SHARP HEALTH PLAN SHARP REES STEALY': 42.0,
+         'STUDENT RESOURCES': 10.08,
+         'UC MC CC33D5SKQ': 42.0,
+         'UC MC HBGHFZ': 37.88,
+         'UC MC HBGJBI': 37.88,
+         'UHC NAVIGATE': 38.8,
+         'UHC PPO ATLANTA GA': 10.08,
+         'UHC PPO QUALCOMM': 39.79,
+         'UHC PPO SALT LAKE CITY UT': 10.08,
+         'UHC UNLISTED PPO': 10.08,
+         'UMR - PO BOX 30541 SALT LAKE CITY': 10.08
+    }
+
+
+
+    expected_result = [
+        ChargeMasterEntry(
+                procedure_identifier = "00004475",
+                procedure_description = "Dual-energy Xray absorptiometry not otherwise specified for research only",
+                cpt_code = "76499",
+                min_reimbursement = 42.63,
+                max_reimbursement = 75.599999999999994,
+                plan = plan,
+                expected_reimbursement = reimbursement,
+                quantity = "84",
+                nubc_revenue_code = "0320",
+        )
+        for plan, reimbursement in expected_reimbursement.items()
+    ]
+
+    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(row.encode())}))
+    assert sorted(expected_result) == sorted(actual_result)
+
+def test_ct_scan(parser):
+    row = """[{
+        "PROCEDURE": "00007337",
+        "CODE_TYPE": "EAP",
+        "CODE": "CPT® 0712T",
+        "NDC": "0350 - CT SCAN - GENERAL CLASSIFICATION",
+        "REV_CODE": "Evaluation of artery wall and plaque to assess stability of plaque noninvasive analysis of plaque in artery using software processing of CT data",
+        "PROCEDURE_DESCRIPTION": "1",
+        "QUANTITY": "252.88",
+        "OP_PRICE": "0",
+        "REIMB_MIN": "227.59",
+        "REIMB_MAX": "128.34",
+        "AETNA BEHAVIORIAL HEALTH ": "128.34",
+        "AETNA MANAGED CHOICE ; AETNA UNLISTED PPO ; GEHA PO BOX 981707 ; MERITAIN HEALTH PO BOX 27267 ; MERITAIN HEALTH PO BOX 853921 ; AETNA CHOICE POS II ": "149.69999999999999",
+        "AFFORDABLE HEALTH ; ANTHEM BLUE CROSS PPO PRUDENT BUYER ; BLUE CROSS HMO UNLISTED IPA ; BLUE CROSS SCRIPPS COASTAL ; BLUE CROSS OUT OF STATE BC/BS ; FEDERAL EMPLOYEES  - FEP ; SCRIPPS HEALTH COMP ; ANTHEM BLUE CROSS EPO ; BLUE CROSS  IMPERIAL COUNTY MED G": "227.59",
+        "ANTHEM BLUE CROSS BH ": "111.52",
+        "BLUE CROSS HOUSE STAFF PRUDENT BUYER ": "111.52",
+        "BLUE CROSS UC CARE ": "127.2",
+        "BLUE SHIELD COVERED CALIFORNIA PPO ": "168.67",
+        "BLUE SHIELD HMO UNLISTED IPA ; BLUE SHIELD IMPERIAL COUNTY MED GRP ": "0",
+        "BLUE SHIELD MHSA BH ": "163.11000000000001",
+        "BLUE SHIELD OUT OF STATE BC/BS ; BLUE SHIELD PPO ": "143.63999999999999",
+        "CIGNA PPO PO BOX 182223 ; GREAT WEST PPO ; CIGNA UNLISTED PPO ; CIGNA PPO PO BOX 188061 ": "Not Reimbursed Separately",
+        "HEALTH NET COVERED CA PPO ": "179.8",
+        "HEALTH NET PPO ; HEALTH NET HMO UNLISTED IPA ; HEALTH NET COVERED CALIFORNIA PCAMG ; HEALTH NET COVERED CA HMO DIRECT NETWORK ": "169.43",
+        "KAISER NORTH ; KAISER SOUTH ": "Variable",
+        "KAISER RAD ONC ": "177.02",
+        "OPTUM EAP & BH ": "124.16",
+        "OPTUM TRANSPLANT ": "165.89",
+        "SHARP HEALTH PLAN SCMG ; SHARP HEALTH PLAN GRAYBILL MED GRP ; SHARP HEALTH PLAN SHARP REES STEALY ": "126.44",
+        "STUDENT RESOURCES ; UHC UNLISTED PPO ; UHC PPO ATLANTA GA ; UHC PPO SALT LAKE CITY UT ; UMR - PO BOX 30541 SALT LAKE CITY ": "30.35",
+        "UC MC CC33D5SKQ ": "126.44",
+        "UC MC HBGHFZ ; UC MC HBGJBI ": "114.05",
+        "UCSD STUDENT HEALTH ": "Variable",
+        "UHC NAVIGATE ": "116.81",
+        "UHC PPO QUALCOMM ": "119.79",
+        "UHC WEST MERCY PHY MED GRP ; UHC WEST SHARP REES STEALY ; UHC WEST SHARP COMMUNITY MED GRP ": "Not Reimbursed Separately",
+        "UNLISTED HMO NON CONTRACTED ; UNLISTED PPO NON CONTRACTED ": null
+    }]"""
+
+    expected_reimbursement = {'AETNA BEHAVIORIAL HEALTH': 42.63,
+         'AETNA CHOICE POS II': 49.73,
+         'AETNA MANAGED CHOICE': 49.73,
+         'AETNA UNLISTED PPO': 49.73,
+         'AFFORDABLE HEALTH': 75.6,
+         'ANTHEM BLUE CROSS BH': 37.04,
+         'ANTHEM BLUE CROSS EPO': 75.6,
+         'ANTHEM BLUE CROSS PPO PRUDENT BUYER': 75.6,
+         'BLUE CROSS  IMPERIAL COUNTY MED G': 75.6,
+         'BLUE CROSS HMO UNLISTED IPA': 75.6,
+         'BLUE CROSS HOUSE STAFF PRUDENT BUYER': 37.04,
+         'BLUE CROSS OUT OF STATE BC/BS': 75.6,
+         'BLUE CROSS SCRIPPS COASTAL': 75.6,
+         'BLUE CROSS UC CARE': 42.25,
+         'BLUE SHIELD COVERED CALIFORNIA PPO': 56.03,
+         'BLUE SHIELD HMO UNLISTED IPA': 0.0,
+         'BLUE SHIELD IMPERIAL COUNTY MED GRP': 0.0,
+         'BLUE SHIELD MHSA BH': 54.18,
+         'BLUE SHIELD OUT OF STATE BC/BS': 47.71,
+         'BLUE SHIELD PPO': 47.71,
+         'FEDERAL EMPLOYEES  - FEP': 75.6,
+         'GEHA PO BOX 981707': 49.73,
+         'HEALTH NET COVERED CA HMO DIRECT NETWORK': 56.28,
+         'HEALTH NET COVERED CA PPO': 59.72,
+         'HEALTH NET COVERED CALIFORNIA PCAMG': 56.28,
+         'HEALTH NET HMO UNLISTED IPA': 56.28,
+         'HEALTH NET PPO': 56.28,
+         'KAISER RAD ONC': 58.8,
+         'MERITAIN HEALTH PO BOX 27267': 49.73,
+         'MERITAIN HEALTH PO BOX 853921': 49.73,
+         'OP PRICE': 0.0,
+         'OPTUM EAP & BH': 41.24,
+         'OPTUM TRANSPLANT': 55.1,
+         'SCRIPPS HEALTH COMP': 75.6,
+         'SHARP HEALTH PLAN GRAYBILL MED GRP': 42.0,
+         'SHARP HEALTH PLAN SCMG': 42.0,
+         'SHARP HEALTH PLAN SHARP REES STEALY': 42.0,
+         'STUDENT RESOURCES': 10.08,
+         'UC MC CC33D5SKQ': 42.0,
+         'UC MC HBGHFZ': 37.88,
+         'UC MC HBGJBI': 37.88,
+         'UHC NAVIGATE': 38.8,
+         'UHC PPO ATLANTA GA': 10.08,
+         'UHC PPO QUALCOMM': 39.79,
+         'UHC PPO SALT LAKE CITY UT': 10.08,
+         'UHC UNLISTED PPO': 10.08,
+         'UMR - PO BOX 30541 SALT LAKE CITY': 10.08
+    }
+
+
+    expected_result = [
+        ChargeMasterEntry(
+                procedure_identifier = "00007337",
+                procedure_description = "Evaluation of artery wall and plaque to assess stability of plaque noninvasive analysis of plaque in artery using software processing of CT data",
+                cpt_code = "0712T",
+                min_reimbursement = 128.34,
+                max_reimbursement = 227.59,
+                plan = plan,
+                expected_reimbursement = reimbursement,
+                quantity = "252.88",
+                nubc_revenue_code = "0350",
+        )
+        for plan, reimbursement in expected_reimbursement.items()
+    ]
+
+    actual_result = list(parser.parse_artifacts({UCSDChargeMasterParser.ARTIFACT_URL : io.BytesIO(row.encode())}))
+    assert sorted(expected_result)[0] == sorted(actual_result)[0]
 
 def test_institution_name(parser):
     assert UCSDChargeMasterParser.institution_name == "UCSD"
