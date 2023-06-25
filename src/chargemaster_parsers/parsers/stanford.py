@@ -165,7 +165,18 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                 #   'MS-DRG': '965',
                 #   'Payer': 'HealthNet',
                 #   'Payer Specific Negotiated Charge': 159516.0}
-                pass
+                for entry in section:
+                    if not entry:
+                        continue
+
+                    yield ChargeMasterEntry(
+                        procedure_identifier = entry["MS-DRG"],
+                        procedure_description = entry["Description"],
+                        ms_drg_code = entry["MS-DRG"],
+                        payer = entry["Payer"],
+                        expected_reimbursement = entry["Payer Specific Negotiated Charge"],
+                    )
+
             elif section_name.strip() == "Outpatient De-identified Minimum Negotiated Charge":
                 # Valid keys: ['APC', 'Description', 'De-Identified Minimum Negotiated Charge']
                 # Example:

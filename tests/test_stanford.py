@@ -83,6 +83,35 @@ def test_gross_charges(parser):
     actual_result = list(parser.parse_artifacts({StanfordChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(test_input).encode('utf-8'))}))
     assert sorted(expected_result) == sorted(actual_result)
 
+def test_ms_drg(parser):
+    test_input = {
+        "File Summary":[
+            {
+                "Prices Posted And Effective":"12/22/2022 12:00:00 AM"
+            }
+        ],
+        "Inpatient Payer Specific Charge": [
+            {
+                'Description': 'Other Multiple Significant Trauma Without Cc/Mcc',
+                'MS-DRG': '965',
+                'Payer': 'HealthNet',
+                'Payer Specific Negotiated Charge': 159516.0
+            }
+        ]
+    }
+
+    expected_result = [
+        ChargeMasterEntry(
+            expected_reimbursement = 159516.0,
+            ms_drg_code = "965",
+            procedure_identifier = "965",
+            procedure_description = "Other Multiple Significant Trauma Without Cc/Mcc",
+            payer = "HealthNet",
+        )
+    ]
+
+    actual_result = list(parser.parse_artifacts({StanfordChargeMasterParser.ARTIFACT_URL : io.BytesIO(json.dumps(test_input).encode('utf-8'))}))
+    assert sorted(expected_result) == sorted(actual_result)
 
 
 def test_institution_name(parser):
