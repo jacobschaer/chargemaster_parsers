@@ -33,7 +33,7 @@ class UCIChargeMasterParser(ChargeMasterParser):
                                 
                             if cash_price != 'N/A': # add cash payer entry only if there's a price listed
                                 yield ChargeMasterEntry(
-                                    procedure_identifier = procedure_identifier.strip(),
+                                    procedure_identifier = procedure_identifier,
                                     procedure_description = procedure_description,
                                     hcpcs_code = hcpcs_code,
                                     in_patient = False,
