@@ -8,3 +8,4 @@ from .scripps import ScrippsChargeMasterParser
 from .sharp import SharpChargeMasterParser
 from .ucsd import UCSDChargeMasterParser
 from .stanford import StanfordChargeMasterParser
+from .uci import UCIChargeMasterParser
