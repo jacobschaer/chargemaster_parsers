@@ -16,6 +16,11 @@ def test_institution_name(parser):
 
 def test_gross_charge_entry(parser):
     row = {
+        "File Summary":[
+          {
+             "Prices Posted And Effective":"8/1/2022 12:00:00 AM"
+          }
+       ],
         "Gross Charges": [
             {
                 "Itemcode": "00000001_7143",
@@ -63,42 +68,43 @@ def test_gross_charge_entry(parser):
 
     expected_result = [
         ChargeMasterEntry(
-            procedure_identifier = '00000001_7143',
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
             hcpcs_code = '10021',
             in_patient = False,
             payer = 'UCI HB',
-            gross_charge = 532.00
+            gross_charge = 532.00,
+            misc_info = {"Itemcode": "00000001_7143"},       
         ), 
     
         ChargeMasterEntry(
-            procedure_identifier = '00000001_7143',
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
             hcpcs_code = '10021',
             in_patient = False,
             payer = 'Cash',
-            gross_charge = 212.8
+            gross_charge = 212.8,
+            misc_info = {"Itemcode": "00000001_7143"},       
         ),
         
         ChargeMasterEntry(
-            procedure_identifier = '00010020_7809',
             procedure_description = "HB BEVACIZUMAB 0.25 MG",
             hcpcs_code = 'C9257',
             in_patient = False,
             payer = 'UCI HB',
-            gross_charge = 25.00
+            gross_charge = 25.00,
+            misc_info = {"Itemcode": "00010020_7809"},       
+
         ),
 
         ChargeMasterEntry(
-            procedure_identifier = '00010020_7809',
             procedure_description = "HB BEVACIZUMAB 0.25 MG",
             hcpcs_code = 'C9257',
             in_patient = False,
             payer = 'Cash',
-            gross_charge = 10.0
+            gross_charge = 10.0,
+            misc_info = {"Itemcode": "00010020_7809"},       
+
         ),
     ]
-
     actual_results = list(parser.parse_artifacts({UCIChargeMasterParser.ARTIFACT_URL: io.BytesIO(json.dumps(row).encode('utf-8'))}))
     assert(sorted(expected_result) == sorted(actual_results))
         

@@ -47,6 +47,7 @@ class ChargeMasterEntry:
         "payer",
         "plan",
         "gross_charge",
+        "misc_info",
 
         # Unused
         "charge_code",
