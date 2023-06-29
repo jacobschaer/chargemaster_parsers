@@ -75,8 +75,8 @@ def test_gross_charge_entry(parser):
             in_patient = False,
             payer = 'UCI HB',
             gross_charge = 532.00,
-            extra_data = {"Itemcode": "00000001_7143"},
-            nubc_revenue_code = '761'   
+             extra_data = {"Itemcode": "00000001_7143"},
+            nubc_revenue_code = '761'         
         ), 
     
         ChargeMasterEntry(
@@ -86,7 +86,7 @@ def test_gross_charge_entry(parser):
             payer = 'Cash',
             gross_charge = 212.8,
             extra_data = {"Itemcode": "00000001_7143"},
-            nubc_revenue_code = '761',
+            nubc_revenue_code = '761',     
         ),
         ChargeMasterEntry(
             procedure_description = "HB BEVACIZUMAB 0.25 MG",
