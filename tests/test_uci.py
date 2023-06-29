@@ -73,6 +73,7 @@ def test_gross_charge_entry(parser):
             in_patient = False,
             payer = 'UCI HB',
             gross_charge = 532.00,
+            nubc_revenue_code = '761',
             misc_info = {"Itemcode": "00000001_7143"},       
         ), 
     
@@ -82,6 +83,7 @@ def test_gross_charge_entry(parser):
             in_patient = False,
             payer = 'Cash',
             gross_charge = 212.8,
+            nubc_revenue_code = '761',
             misc_info = {"Itemcode": "00000001_7143"},       
         ),
         
