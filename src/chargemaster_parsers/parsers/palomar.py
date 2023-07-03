@@ -10,7 +10,7 @@ class PalomarChargeMasterParser(ChargeMasterParser):
     ARTIFACT_URLS = (ARTIFACT_URL,)
 
     def parse_artifacts(self, artifacts):
-        wb = openpyxl.load_workbook(artifacts[PalomarChargeMasterParser.ARTIFACT_URL])
+        wb = openpyxl.load_workbook(artifacts[PalomarChargeMasterParser.ARTIFACT_URL], data_only=True)
         cdm_column = None
         cdm_desc_column = None
         price_column = None
@@ -18,21 +18,36 @@ class PalomarChargeMasterParser(ChargeMasterParser):
         for row in wb.worksheets[0].iter_rows():
             if not found_headers:
                 for i, cell in enumerate(row[:3]):
-                    if cell.value.strip() == "CDM":
+                    value = cell.value
+                    if type(value) == str:
+                        value = value.strip()
+                    if value == "CDM":
                         cdm_column = i
                         found_headers = True
-                    elif cell.value.strip() == "CDM_DESC":
+                    elif value == "CDM_DESC":
                         cdm_desc_column = i
                         found_headers = True
-                    elif cell.value.strip() == "PRICE":
+                    elif value == "PRICE":
                         price_column = i
                         found_headers = True
             else:
-                cdm = row[cdm_column].value.strip()
-                cdm_desc = row[cdm_desc_column].value.strip()
-                price = float(
-                    row[price_column].value.strip().replace("$", "").replace(",", "")
-                )
+                cdm = row[cdm_column].value
+                if type(cdm) == str:
+                    cdm = cdm.strip()
+                else:
+                    cdm = str(cdm)
+
+                cdm_desc = row[cdm_desc_column].value
+                if type(cdm_desc) == str:
+                    cdm_desc = cdm_desc.strip()
+                else:
+                    cdm_desc = str(cdm_desc)
+
+                price = row[price_column].value
+                if type(price) == str:
+                    price = float(
+                        price.strip().replace("$", "").replace(",", "")
+                    )
 
                 yield ChargeMasterEntry(
                     procedure_identifier=cdm,

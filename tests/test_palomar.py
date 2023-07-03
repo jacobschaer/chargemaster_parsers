@@ -18,7 +18,7 @@ def test_simple_row(parser):
     ws.cell(row=1, column=1, value="CDM")
     ws.cell(row=1, column=2, value="CDM_DESC")
     ws.cell(row=1, column=3, value="PRICE")
-    ws.cell(row=2, column=1, value="473590548")
+    ws.cell(row=2, column=1, value=473590548)
     ws.cell(row=2, column=2, value="PFC 86-4192")
     ws.cell(row=2, column=3, value="$1,034.00")
 
