@@ -12,103 +12,43 @@ def parser():
     yield SouthwestChargeMasterParser()
 
 
-def build_test_workbook(values, scramble=False, include_junk_rows=True):
-    wb = Workbook()
-    ws = wb.active
-    curr_row = 1
+TEST_CASE_1 = "\n".join(
+    [
+        "Hospital Name: Southwest Healthcare System,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        "Price Effective Date: 4/1/2023,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare , Blue Cross Anthem , Blue Cross Medi-Cal , Blue Cross Senior , Blue Shield California Promise , Blue Shield Promise , Blue Shield Promise Rady , Blue Shield Select , Blue Shield Senior , Brand New Day , Cal Optima Medicaid , Cigna HMO/PPO , Epic Health , Epic Health Plan Medicare , Exclusive Care ,First Health, HealthNet , HealthNet Medi-Cal , HealthNet Medicare , Heritage Commercial , Heritage Medi-Cal , Heritage Medicare , Humana Medicare , Inland Empire Health Plan , Inland Empire Health Plan Medicare , Kaiser , Kaiser Medi-Cal , Kaiser Medicare , Molina , Molina Medi-Cal , Molina Medicare , Multiplan , Palomar Health , Scan Medicare , Sharp Health Plan , United Healthcare HMO, United Healthcare PPO, United Healthcare Community Plan  , United Healthcare Medicare ",
+        'Southwest Healthcare System,COMPONENT FEM CR LT 4N,38000501,Chargemaster,,C1776,,,278,"1,922",769,398,"5,419",884,-1,761,-1,-1,-1,-1,-1,-1,-1,-1,-1,550,"2,956",-1,"3,941",884,446,-1,"4,050",475,-1,398,-1,-1,-1,646,-1,-1,-1,-1,-1,"1,730",942,-1,"5,419",-1,-1,-1,-1',
+    ]
+)
 
-    if include_junk_rows:
-        ws.cell(
-            row=curr_row, column=1, value="Hospital Name: Southwest Healthcare System"
-        )
-        curr_row += 1
-        ws.cell(row=curr_row, column=1, value="Price Effective Date: 4/1/2023")
-        curr_row += 1
+TEST_CASE_1_NO_HEADER = "\n".join(
+    [
+        "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare , Blue Cross Anthem , Blue Cross Medi-Cal , Blue Cross Senior , Blue Shield California Promise , Blue Shield Promise , Blue Shield Promise Rady , Blue Shield Select , Blue Shield Senior , Brand New Day , Cal Optima Medicaid , Cigna HMO/PPO , Epic Health , Epic Health Plan Medicare , Exclusive Care ,First Health, HealthNet , HealthNet Medi-Cal , HealthNet Medicare , Heritage Commercial , Heritage Medi-Cal , Heritage Medicare , Humana Medicare , Inland Empire Health Plan , Inland Empire Health Plan Medicare , Kaiser , Kaiser Medi-Cal , Kaiser Medicare , Molina , Molina Medi-Cal , Molina Medicare , Multiplan , Palomar Health , Scan Medicare , Sharp Health Plan , United Healthcare HMO, United Healthcare PPO, United Healthcare Community Plan  , United Healthcare Medicare ",
+        'Southwest Healthcare System,COMPONENT FEM CR LT 4N,38000501,Chargemaster,,C1776,,,278,"1,922",769,398,"5,419",884,-1,761,-1,-1,-1,-1,-1,-1,-1,-1,-1,550,"2,956",-1,"3,941",884,446,-1,"4,050",475,-1,398,-1,-1,-1,646,-1,-1,-1,-1,-1,"1,730",942,-1,"5,419",-1,-1,-1,-1',
+    ]
+)
 
-    if scramble:
-        new_values = {}
-        for key, value in reversed(values.items()):
-            new_values[key] = value
-        values = new_values
-
-    # Header row
-    for index, key in enumerate(values):
-        ws.cell(row=curr_row, column=index + 1, value=key)
-    curr_row += 1
-
-    for index, value in enumerate(values.values()):
-        ws.cell(row=curr_row, column=index + 1, value=value)
-    curr_row += 1
-
-    return wb
-
-
-TEST_CASE_1 = {
-    "Facility": "Southwest Healthcare System",
-    "Description": "COMPONENT FEM CR LT 4N",
-    "CDM": 38000501,
-    "Code Type": "Chargemaster",
-    "DRG (If Applicable)": "",
-    "CPT/HCPCS (If Applicable)": "C1776",
-    "EAPG (If Applicable)": "",
-    "APC (If Applicable)": "",
-    "Rev Code (If Applicable)": 278,
-    "Gross Charge": 1922,
-    "Cash Price": 769,
-    "Minimum": 398,
-    "Maximum": 5419,
-    "Aetna HMO/PPO": 848,
-    "Aetna Medicare": -1,
-    "Blue Cross Anthem": 761,
-    "Blue Cross Medi-Cal": -1,
-    "Blue Cross Senior": -1,
-    "Blue Shield California Promise": -1,
-    "Blue Shield Promise": -1,
-    "Blue Shield Promise Rady": -1,
-    "Blue Shield Select": -1,
-    "Blue Shield Senior": -1,
-    "Brand New Day": -1,
-    "Cal Optima Medicaid": -1,
-    "Cigna HMO/PPO": 550,
-    "Epic Health": 2956,
-    "Epic Health Plan Medicare": -1,
-    "Exclusive Care": 3941,
-    "First Health": 884,
-    "HealthNet": 446,
-    "HealthNet Medi-Cal": -1,
-    "HealthNet Medicare": 4050,
-    "Heritage Commercial": 475,
-    "Heritage Medi-Cal": -1,
-    "Heritage Medicare": 398,
-    "Humana Medicare": -1,
-    "Inland Empire Health Plan": -1,
-    "Inland Empire Health Plan Medicare": -1,
-    "Kaiser": 646,
-    "Kaiser Medi-Cal": -1,
-    "Kaiser Medicare": -1,
-    "Molina": -1,
-    "Molina Medi-Cal": -1,
-    "Molina Medicare": -1,
-    "Multiplan": 1730,
-    "Palomar Health": 942,
-    "Scan Medicare": -1,
-    "Sharp Health Plan": 5419,
-    "United Healthcare HMO": -1,
-    "United Healthcare PPO": -1,
-    "United Healthcare Community Plan": -1,
-    "United Healthcare Medicare": -1,
-}
+TEST_CASE_1_SCRAMBLED_HEADER = "\n".join(
+    [
+        "Hospital Name: Southwest Healthcare System,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        "Price Effective Date: 4/1/2023,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,",
+        "CPT/HCPCS (If Applicable),EAPG (If Applicable),Facility,Description,CDM,Code Type,DRG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare , Blue Cross Anthem , Blue Cross Medi-Cal , Blue Cross Senior , Blue Shield California Promise , Blue Shield Promise , Blue Shield Promise Rady , Blue Shield Select , Blue Shield Senior , Brand New Day , Cal Optima Medicaid , Cigna HMO/PPO , Epic Health , Epic Health Plan Medicare , Exclusive Care ,First Health, HealthNet , HealthNet Medi-Cal , HealthNet Medicare , Heritage Commercial , Heritage Medi-Cal , Heritage Medicare , Humana Medicare , Inland Empire Health Plan , Inland Empire Health Plan Medicare , Kaiser , Kaiser Medi-Cal , Kaiser Medicare , Molina , Molina Medi-Cal , Molina Medicare , Multiplan , Palomar Health , Scan Medicare , Sharp Health Plan , United Healthcare HMO, United Healthcare PPO, United Healthcare Community Plan  , United Healthcare Medicare ",
+        'C1776,,Southwest Healthcare System,COMPONENT FEM CR LT 4N,38000501,Chargemaster,,,278,"1,922",769,398,"5,419",884,-1,761,-1,-1,-1,-1,-1,-1,-1,-1,-1,550,"2,956",-1,"3,941",884,446,-1,"4,050",475,-1,398,-1,-1,-1,646,-1,-1,-1,-1,-1,"1,730",942,-1,"5,419",-1,-1,-1,-1',
+    ]
+)
 
 EXPECTED_RESULTS_1 = [
     ChargeMasterEntry(
-        expected_reimbursement=848,
+        expected_reimbursement=884.0,
         gross_charge=1922.0,
         hcpcs_code="C1776",
         max_reimbursement=5419.0,
         min_reimbursement=398.0,
         payer="Aetna HMO/PPO",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=761,
@@ -118,7 +58,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Blue Cross Anthem",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=550,
@@ -128,7 +68,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Cigna HMO/PPO",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=2956,
@@ -138,7 +78,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Epic Health",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=3941,
@@ -148,7 +88,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Exclusive Care",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=884,
@@ -158,7 +98,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="First Health",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=446,
@@ -168,7 +108,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="HealthNet",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=4050,
@@ -178,7 +118,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="HealthNet Medicare",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=475,
@@ -188,7 +128,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Heritage Commercial",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=398,
@@ -198,7 +138,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Heritage Medicare",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=646,
@@ -208,7 +148,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Kaiser",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=1730,
@@ -218,7 +158,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Multiplan",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=942,
@@ -228,7 +168,7 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Palomar Health",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         expected_reimbursement=5419,
@@ -238,65 +178,70 @@ EXPECTED_RESULTS_1 = [
         min_reimbursement=398.0,
         payer="Sharp Health Plan",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
     ChargeMasterEntry(
         gross_charge=769.0,
         hcpcs_code="C1776",
         payer="Cash",
         procedure_description="COMPONENT FEM CR LT 4N",
-        procedure_identifier=38000501,
+        procedure_identifier="38000501",
     ),
 ]
 
 
 def test_simple_row(parser):
-    wb = build_test_workbook(TEST_CASE_1)
-
-    expected_result = EXPECTED_RESULTS_1
-
     with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
         actual_result = list(
             parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        TEST_CASE_1.encode("utf-8")
+                    )
+                }
             )
         )
 
-    assert sorted(expected_result) == sorted(actual_result)
+    assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
 
-def test_simple_messed_up(parser):
-    wb = build_test_workbook(TEST_CASE_1, scramble=True, include_junk_rows=False)
 
-    expected_result = EXPECTED_RESULTS_1
-
+def test_simple_row_no_leadin(parser):
     with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
         actual_result = list(
             parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        TEST_CASE_1_NO_HEADER.encode("utf-8")
+                    )
+                }
             )
         )
 
-    assert sorted(expected_result) == sorted(actual_result)
+    assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
+
+
+def test_simple_row_scrambled_columns(parser):
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        actual_result = list(
+            parser.parse_artifacts(
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        TEST_CASE_1_SCRAMBLED_HEADER.encode("utf-8")
+                    )
+                }
+            )
+        )
+
+    assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
+
 
 def test_extra_apc(parser):
-    test_case = {"Facility": "Southwest Healthcare System",
-    "Description": "PATHOGEN REDUCED PLATELETS",
-    "CDM": 50302033,
-    "Code Type": "Chargemaster",
-    "DRG (If Applicable)": "",
-    "CPT/HCPCS (If Applicable)": "P9073",
-    "EAPG (If Applicable)": "",
-    "APC (If Applicable)": "9536",
-    "Rev Code (If Applicable)": 390,
-    "Gross Charge": 793,
-    "Cash Price": 317,
-    "Minimum": 266,
-    "Maximum": 974,
-    "Aetna HMO/PPO": 288}
+    test_input = "\n".join(
+        [
+            "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare , Blue Cross Anthem , Blue Cross Medi-Cal , Blue Cross Senior , Blue Shield California Promise , Blue Shield Promise , Blue Shield Promise Rady , Blue Shield Select , Blue Shield Senior , Brand New Day , Cal Optima Medicaid , Cigna HMO/PPO , Epic Health , Epic Health Plan Medicare , Exclusive Care ,First Health, HealthNet , HealthNet Medi-Cal , HealthNet Medicare , Heritage Commercial , Heritage Medi-Cal , Heritage Medicare , Humana Medicare , Inland Empire Health Plan , Inland Empire Health Plan Medicare , Kaiser , Kaiser Medi-Cal , Kaiser Medicare , Molina , Molina Medi-Cal , Molina Medicare , Multiplan , Palomar Health , Scan Medicare , Sharp Health Plan , United Healthcare HMO, United Healthcare PPO, United Healthcare Community Plan  , United Healthcare Medicare ",
+            "Southwest Healthcare System,PATHOGEN REDUCED PLATELETS,50302033,Chargemaster,,P9073,,9536,390,793,317,266,974,288,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1",
+        ]
+    )
 
     expected_result = [
         ChargeMasterEntry(
@@ -307,103 +252,40 @@ def test_extra_apc(parser):
             min_reimbursement=266.0,
             payer="Aetna HMO/PPO",
             procedure_description="PATHOGEN REDUCED PLATELETS",
-            procedure_identifier=50302033,
-            extra_data = {"APC (If Applicable)" : "9536"}
+            procedure_identifier="50302033",
+            extra_data={"APC (If Applicable)": "9536"},
         ),
         ChargeMasterEntry(
             gross_charge=317,
             hcpcs_code="P9073",
             payer="Cash",
             procedure_description="PATHOGEN REDUCED PLATELETS",
-            procedure_identifier=50302033,
-            extra_data = {"APC (If Applicable)" : "9536"}
+            procedure_identifier="50302033",
+            extra_data={"APC (If Applicable)": "9536"},
         ),
     ]
 
-    wb = build_test_workbook(test_case, scramble=True, include_junk_rows=False)
-
-    expected_result = expected_result
-
     with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
         actual_result = list(
             parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        test_input.encode("utf-8")
+                    )
+                }
             )
         )
 
     assert sorted(expected_result) == sorted(actual_result)
 
-def test_extra_apc(parser):
-    test_case = {"Facility": "Southwest Healthcare System",
-    "Description": "PATHOGEN REDUCED PLATELETS",
-    "CDM": 50302033,
-    "Code Type": "Chargemaster",
-    "DRG (If Applicable)": "",
-    "CPT/HCPCS (If Applicable)": "P9073",
-    "EAPG (If Applicable)": "",
-    "APC (If Applicable)": "9536",
-    "Rev Code (If Applicable)": 390,
-    "Gross Charge": 793,
-    "Cash Price": 317,
-    "Minimum": 266,
-    "Maximum": 974,
-    "Aetna HMO/PPO": 288}
-
-    expected_result = [
-        ChargeMasterEntry(
-            expected_reimbursement=288,
-            gross_charge=793.0,
-            hcpcs_code="P9073",
-            max_reimbursement=974.0,
-            min_reimbursement=266.0,
-            payer="Aetna HMO/PPO",
-            procedure_description="PATHOGEN REDUCED PLATELETS",
-            procedure_identifier=50302033,
-            extra_data = {"APC (If Applicable)" : "9536"}
-        ),
-        ChargeMasterEntry(
-            gross_charge=317,
-            hcpcs_code="P9073",
-            payer="Cash",
-            procedure_description="PATHOGEN REDUCED PLATELETS",
-            procedure_identifier=50302033,
-            extra_data = {"APC (If Applicable)" : "9536"}
-        ),
-    ]
-
-    wb = build_test_workbook(test_case, scramble=True, include_junk_rows=False)
-
-    expected_result = expected_result
-
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
-        actual_result = list(
-            parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
-            )
-        )
-
-    assert sorted(expected_result) == sorted(actual_result)
 
 def test_other_cpt(parser):
-    test_case = {"Facility": "Southwest Healthcare System",
-    "Description": "Spirom fev/fvc>/=70%/w/ocopd",
-    "CDM": "",
-    "Code Type": "Other CPT/HCPCS",
-    "DRG (If Applicable)": "",
-    "CPT/HCPCS (If Applicable)": "3027F",
-    "EAPG (If Applicable)": "",
-    "APC (If Applicable)": "",
-    "Rev Code (If Applicable)": "",
-    "Gross Charge": -1,
-    "Cash Price": -1,
-    "Minimum": 10526,
-    "Maximum": 10526,
-    "Blue Shield Select": 10526
-}
+    test_input = "\n".join(
+        [
+            "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare , Blue Cross Anthem , Blue Cross Medi-Cal , Blue Cross Senior , Blue Shield California Promise , Blue Shield Promise , Blue Shield Promise Rady , Blue Shield Select , Blue Shield Senior , Brand New Day , Cal Optima Medicaid , Cigna HMO/PPO , Epic Health , Epic Health Plan Medicare , Exclusive Care ,First Health, HealthNet , HealthNet Medi-Cal , HealthNet Medicare , Heritage Commercial , Heritage Medi-Cal , Heritage Medicare , Humana Medicare , Inland Empire Health Plan , Inland Empire Health Plan Medicare , Kaiser , Kaiser Medi-Cal , Kaiser Medicare , Molina , Molina Medi-Cal , Molina Medicare , Multiplan , Palomar Health , Scan Medicare , Sharp Health Plan , United Healthcare HMO, United Healthcare PPO, United Healthcare Community Plan  , United Healthcare Medicare ",
+            'Southwest Healthcare System,Spirom fev/fvc>/=70%/w/ocopd,,Other CPT/HCPCS,,3027F,,,,-1,-1,"10,526","10,526",-1,-1,-1,-1,-1,-1,-1,-1,"10,526",-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1',
+        ]
+    )
 
     expected_result = [
         ChargeMasterEntry(
@@ -417,38 +299,27 @@ def test_other_cpt(parser):
         ),
     ]
 
-    wb = build_test_workbook(test_case, scramble=True, include_junk_rows=False)
-
-    expected_result = expected_result
-
     with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
         actual_result = list(
             parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        test_input.encode("utf-8")
+                    )
+                }
             )
         )
 
     assert sorted(expected_result) == sorted(actual_result)
 
-def test_ms_drg(parser):
-    test_case = {"Facility": "Southwest Healthcare System",
-    "Description": "HEART TRANSPLANT OR IMPLANT OF HEART ASSIST SYSTEM WITH MCC",
-    "CDM": "",
-    "Code Type": "MS-DRG",
-    "DRG (If Applicable)": 1,
-    "CPT/HCPCS (If Applicable)": "",
-    "EAPG (If Applicable)": "",
-    "APC (If Applicable)": "",
-    "Rev Code (If Applicable)": "",
-    "Gross Charge": -1,
-    "Cash Price": -1,
-    "Minimum": 239580,
-    "Maximum": 448170,
-    "Aetna Medicare": 254017
-}    
 
+def test_ms_drg(parser):
+    test_input = "\n".join(
+        [
+            "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  , Aetna HMO/PPO , Aetna Medicare ",
+            'Southwest Healthcare System,HEART TRANSPLANT OR IMPLANT OF HEART ASSIST SYSTEM WITH MCC,,MS-DRG,1,,,,,-1,-1,"239,580","448,170",-1,"254,017",',
+        ]
+    )
 
     expected_result = [
         ChargeMasterEntry(
@@ -462,18 +333,54 @@ def test_ms_drg(parser):
         ),
     ]
 
-    wb = build_test_workbook(test_case, scramble=True, include_junk_rows=False)
-
-    expected_result = expected_result
-
     with tempfile.TemporaryDirectory() as tmp_dir:
-        filename = os.path.join(tmp_dir, "southwest.xlsx")
-        wb.save(filename)
         actual_result = list(
             parser.parse_artifacts(
-                {SouthwestChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        test_input.encode("utf-8")
+                    )
+                }
             )
         )
+
+    assert sorted(expected_result) == sorted(actual_result)
+
+
+def test_per_diem(parser):
+    test_input = "\n".join(
+        [
+            "Facility,Description,CDM,Code Type,DRG (If Applicable),CPT/HCPCS (If Applicable),EAPG (If Applicable),APC (If Applicable),Rev Code (If Applicable),   Gross Charge   ,   Cash Price   ,   Minimum   ,   Maximum  ,  Blue Shield Select ",
+            'Southwest Healthcare System,CARDIAC VALVE AND OTHER MAJOR CARDIOTHORACIC PROCEDURES WITH CARDIAC CATHETERIZATION WITH MCC,,MS-DRG,216,,,,,-1,-1,"25,676","155,120","   $3,622 Per Diem   "',
+        ]
+    )
+
+    expected_result = [
+        ChargeMasterEntry(
+            expected_reimbursement=3622.0,
+            max_reimbursement=155120.0,
+            min_reimbursement=25676.0,
+            ms_drg_code="216",
+            payer="Blue Shield Select",
+            procedure_description="CARDIAC VALVE AND OTHER MAJOR CARDIOTHORACIC PROCEDURES WITH CARDIAC CATHETERIZATION WITH MCC",
+            procedure_identifier="MS_DRG_216",
+        )
+    ]
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        actual_result = list(
+            parser.parse_artifacts(
+                {
+                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                        test_input.encode("utf-8")
+                    )
+                }
+            )
+        )
+
+    import pprint
+
+    pprint.pprint(actual_result)
 
     assert sorted(expected_result) == sorted(actual_result)
 

@@ -10,5 +10,4 @@ from .ucsd import UCSDChargeMasterParser
 from .stanford import StanfordChargeMasterParser
 from .uci import UCIChargeMasterParser
 from .southwest import SouthwestChargeMasterParser
-#from .palomar import PalomarChargeMasterParser
-
+from .palomar import PalomarChargeMasterParser
