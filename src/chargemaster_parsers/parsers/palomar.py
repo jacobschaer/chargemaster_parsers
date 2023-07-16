@@ -10,7 +10,9 @@ class PalomarChargeMasterParser(ChargeMasterParser):
     ARTIFACT_URLS = (ARTIFACT_URL,)
 
     def parse_artifacts(self, artifacts):
-        wb = openpyxl.load_workbook(artifacts[PalomarChargeMasterParser.ARTIFACT_URL], data_only=True)
+        wb = openpyxl.load_workbook(
+            artifacts[PalomarChargeMasterParser.ARTIFACT_URL], data_only=True
+        )
         cdm_column = None
         cdm_desc_column = None
         price_column = None
@@ -45,9 +47,7 @@ class PalomarChargeMasterParser(ChargeMasterParser):
 
                 price = row[price_column].value
                 if type(price) == str:
-                    price = float(
-                        price.strip().replace("$", "").replace(",", "")
-                    )
+                    price = float(price.strip().replace("$", "").replace(",", ""))
 
                 yield ChargeMasterEntry(
                     procedure_identifier=cdm,

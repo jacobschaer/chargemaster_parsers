@@ -191,46 +191,43 @@ EXPECTED_RESULTS_1 = [
 
 
 def test_simple_row(parser):
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        TEST_CASE_1.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    TEST_CASE_1.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
 
 
 def test_simple_row_no_leadin(parser):
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        TEST_CASE_1_NO_HEADER.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    TEST_CASE_1_NO_HEADER.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
 
 
 def test_simple_row_scrambled_columns(parser):
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        TEST_CASE_1_SCRAMBLED_HEADER.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    TEST_CASE_1_SCRAMBLED_HEADER.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(EXPECTED_RESULTS_1) == sorted(actual_result)
 
@@ -265,16 +262,15 @@ def test_extra_apc(parser):
         ),
     ]
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        test_input.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_input.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(expected_result) == sorted(actual_result)
 
@@ -299,16 +295,15 @@ def test_other_cpt(parser):
         ),
     ]
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        test_input.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_input.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(expected_result) == sorted(actual_result)
 
@@ -333,16 +328,15 @@ def test_ms_drg(parser):
         ),
     ]
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        test_input.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_input.encode("utf-8")
+                )
+            }
         )
+    )
 
     assert sorted(expected_result) == sorted(actual_result)
 
@@ -367,20 +361,15 @@ def test_per_diem(parser):
         )
     ]
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        actual_result = list(
-            parser.parse_artifacts(
-                {
-                    SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
-                        test_input.encode("utf-8")
-                    )
-                }
-            )
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                SouthwestChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_input.encode("utf-8")
+                )
+            }
         )
-
-    import pprint
-
-    pprint.pprint(actual_result)
+    )
 
     assert sorted(expected_result) == sorted(actual_result)
 
