@@ -6,9 +6,11 @@ import pytest
 import io
 import os
 
+
 @pytest.fixture
 def parser():
     yield SharpChargeMasterParser()
+
 
 def test_simple_row(parser):
     wb = Workbook()
@@ -30,29 +32,41 @@ def test_simple_row(parser):
 
     expected_result = [
         ChargeMasterEntry(
-            procedure_identifier = '414300034',
-            location = 'Memorial',
-            procedure_description = "US BX BREAST INITIAL",
-            gross_charge = 6720.0,
+            procedure_identifier="414300034",
+            location="Memorial",
+            procedure_description="US BX BREAST INITIAL",
+            gross_charge=6720.0,
         ),
         ChargeMasterEntry(
-            procedure_identifier = '414302054',
-            location = 'Memorial',
-            procedure_description = "PERC BX LYMPH NODE",
-            gross_charge = 4442.0,
-        )
+            procedure_identifier="414302054",
+            location="Memorial",
+            procedure_description="PERC BX LYMPH NODE",
+            gross_charge=4442.0,
+        ),
     ]
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         filename = os.path.join(tmp_dir, "sharp.xlsx")
         wb.save(filename)
-        actual_result = list(parser.parse_artifacts({"https://www.sharp.com/chargemaster/memorial/upload/SMH3082.xlsx" : open(filename, "rb")}))
+        actual_result = list(
+            parser.parse_artifacts(
+                {
+                    "https://www.sharp.com/chargemaster/memorial/upload/SMH3082.xlsx": open(
+                        filename, "rb"
+                    )
+                }
+            )
+        )
     assert sorted(expected_result) == sorted(actual_result)
+
 
 def test_institution_name(parser):
     assert SharpChargeMasterParser.institution_name == "Sharp"
     assert parser.institution_name == "Sharp"
 
+
 def test_artifact_urls(parser):
-    assert SharpChargeMasterParser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS
+    assert (
+        SharpChargeMasterParser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS
+    )
     assert parser.artifact_urls == SharpChargeMasterParser.ARTIFACT_URLS

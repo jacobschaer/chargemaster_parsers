@@ -1,12 +1,11 @@
 class ChargeMasterParser:
-    registered_parsers = {}    
+    registered_parsers = {}
 
     # Register imported derived classes - requires Python 3.6+
     # https://python.readthedocs.io/en/stable/reference/datamodel.html#object.__init_subclass__
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         cls.registered_parsers[cls.institution_name.strip()] = cls
-
 
     # Requries Python 3.9+ to nest classmethod and property
     # https://docs.python.org/3.11/library/functions.html#classmethod
@@ -28,32 +27,36 @@ class ChargeMasterParser:
         for candidate_institution in cls.registered_parsers:
             if candidate_institution.lower() == institution.lower():
                 return cls.registered_parsers[candidate_institution]()
-        raise ValueError(f"No registered institution matched {institution}. Choices were {', '.join(cls.registered_parsers)}")
+        raise ValueError(
+            f"No registered institution matched {institution}. Choices were {', '.join(cls.registered_parsers)}"
+        )
+
 
 class ChargeMasterEntry:
-    __slots__ = sorted([
-        "location",
-        "procedure_identifier",
-        "procedure_description",
-        "ndc_code",
-        "nubc_revenue_code",
-        "cpt_code",
-        "hcpcs_code",
-        "ms_drg_code",
-        "max_reimbursement",
-        "min_reimbursement",
-        "expected_reimbursement",
-        "in_patient",
-        "payer",
-        "plan",
-        "gross_charge",
-        "extra_data",
-
-        # Unused
-        "charge_code",
-        "quantity",
-        "in_patient_price"
-    ])
+    __slots__ = sorted(
+        [
+            "location",
+            "procedure_identifier",
+            "procedure_description",
+            "ndc_code",
+            "nubc_revenue_code",
+            "cpt_code",
+            "hcpcs_code",
+            "ms_drg_code",
+            "max_reimbursement",
+            "min_reimbursement",
+            "expected_reimbursement",
+            "in_patient",
+            "payer",
+            "plan",
+            "gross_charge",
+            "extra_data",
+            # Unused
+            "charge_code",
+            "quantity",
+            "in_patient_price",
+        ]
+    )
 
     def __init__(self, **kwargs):
         for key in self.__slots__:
@@ -89,8 +92,8 @@ class ChargeMasterEntry:
             value = getattr(self, key)
             if value is not None:
                 if isinstance(value, str):
-                    values.append((key,f"\"{value}\""))
+                    values.append((key, f'"{value}"'))
                 else:
-                    values.append((key,value))
+                    values.append((key, value))
         params = ", ".join([f"{key}={value}" for key, value in values])
         return f"ChargeMasterEntry({params})"

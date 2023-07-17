@@ -213,12 +213,11 @@ class SharpChargeMasterParser(ChargeMasterParser):
         "https://www.sharp.com/chargemaster/memorial/upload/SMH3082.xlsx",
     )
 
-
     _LOCATION_FORMAL_NAMES = {
         "grossmont": "Grossmont",
         "chula-vista": "Chula Vista",
         "coronado": "Coronado",
-        "memorial": "Memorial", 
+        "memorial": "Memorial",
     }
 
     _ARTIFACT_URL_LOCATION_REGEX = re.compile(r".+?chargemaster/(.+?)/upload.+?")
@@ -234,9 +233,12 @@ class SharpChargeMasterParser(ChargeMasterParser):
 
         import requests
         import time
+
         for center, abbr in options:
             for i in range(3000, 5000):
-                url = f"https://www.sharp.com/chargemaster/{center}/upload/{abbr}{i}.xlsx"
+                url = (
+                    f"https://www.sharp.com/chargemaster/{center}/upload/{abbr}{i}.xlsx"
+                )
                 request = requests.get(url)
                 time.sleep(1)
                 try:
@@ -252,7 +254,11 @@ class SharpChargeMasterParser(ChargeMasterParser):
                 if matcher:
                     location = self._LOCATION_FORMAL_NAMES[matcher.groups()[0]]
                     wb = openpyxl.load_workbook(artifact)
-                    charge_code_column, charge_code_description_column, charge_column = None, None, None
+                    (
+                        charge_code_column,
+                        charge_code_description_column,
+                        charge_column,
+                    ) = (None, None, None)
                     for i, row in enumerate(wb.worksheets[0].iter_rows()):
                         values = []
                         for cell in row[:3]:
@@ -263,20 +269,37 @@ class SharpChargeMasterParser(ChargeMasterParser):
                             else:
                                 values.append(None)
 
-                        if (charge_code_column, charge_code_description_column, charge_column) == (None, None, None):
-                            if ["ChargeCode","ChargeCode Description", "Charge"] == values:
-                                charge_code_column, charge_code_description_column, charge_column = 0, 1, 2
+                        if (
+                            charge_code_column,
+                            charge_code_description_column,
+                            charge_column,
+                        ) == (None, None, None):
+                            if [
+                                "ChargeCode",
+                                "ChargeCode Description",
+                                "Charge",
+                            ] == values:
+                                (
+                                    charge_code_column,
+                                    charge_code_description_column,
+                                    charge_column,
+                                ) = (0, 1, 2)
                         else:
                             charge_code = row[charge_code_column].value
-                            charge_code_description = row[charge_code_description_column].value
+                            charge_code_description = row[
+                                charge_code_description_column
+                            ].value
                             charge = row[charge_column].value
                             if charge_code:
                                 try:
-                                    charge = float(charge.replace('$', '').replace(',',''))
+                                    charge = float(
+                                        charge.replace("$", "").replace(",", "")
+                                    )
                                     yield ChargeMasterEntry(
-                                        location = location,
-                                        procedure_identifier = charge_code,
-                                        procedure_description = charge_code_description,
-                                        gross_charge = charge)
+                                        location=location,
+                                        procedure_identifier=charge_code,
+                                        procedure_description=charge_code_description,
+                                        gross_charge=charge,
+                                    )
                                 except ValueError:
                                     pass

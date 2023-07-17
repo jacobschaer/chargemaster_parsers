@@ -4,10 +4,11 @@ import pprint
 
 from .parsers import ChargeMasterEntry, ChargeMasterParser
 
+
 class StanfordChargeMasterParser(ChargeMasterParser):
     INSTITUTION_NAME = "Stanford"
     ARTIFACT_URL = "https://stanfordhealthcare.org/content/dam/SHC/patientsandvisitors/pricingtransparency/946174066_stanford-health-care_standardcharges.json"
-    ARTIFACT_URLS = (ARTIFACT_URL, )
+    ARTIFACT_URLS = (ARTIFACT_URL,)
 
     def parse_artifacts(self, artifacts):
         hcpcs_gross_charges = dict()
@@ -76,7 +77,7 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                         # Some rows are empty for some reason
                         continue
 
-                    code = entry.get('Code', None)
+                    code = entry.get("Code", None)
                     if code:
                         if code.lower().strip().startswith("hcpcs"):
                             _, hcpcs_code = code.split(" ")
@@ -86,13 +87,13 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                     # Always yield the cash rates - HCPCS codes will get payer
                     # specific values in a later section
                     yield ChargeMasterEntry(
-                        procedure_identifier = procedure_identifier,
-                        procedure_description = procedure_description,
-                        gross_charge = cash_price,
-                        cpt_code = cpt_code,
-                        hcpcs_code = hcpcs_code,
-                        payer = "Cash",
-                        quantity = quantity
+                        procedure_identifier=procedure_identifier,
+                        procedure_description=procedure_description,
+                        gross_charge=cash_price,
+                        cpt_code=cpt_code,
+                        hcpcs_code=hcpcs_code,
+                        payer="Cash",
+                        quantity=quantity,
                     )
 
             elif section_name.strip() == "Discounted Cash Pricing Policy":
@@ -128,30 +129,35 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                     min_reimbursement = entry["Payer Specific Negotiated Charge - Min"]
                     location = entry["Location"]
 
-
                     yield ChargeMasterEntry(
-                        procedure_identifier = procedure_identifier,
-                        procedure_description = procedure_description,
-                        gross_charge = gross_charge,
-                        hcpcs_code = hcpcs_code,
-                        payer = payer,
-                        location = location,    
-                        expected_reimbursement = expected_reimbursement,
-                        min_reimbursement = min_reimbursement,
-                        max_reimbursement = max_reimbursement,
+                        procedure_identifier=procedure_identifier,
+                        procedure_description=procedure_description,
+                        gross_charge=gross_charge,
+                        hcpcs_code=hcpcs_code,
+                        payer=payer,
+                        location=location,
+                        expected_reimbursement=expected_reimbursement,
+                        min_reimbursement=min_reimbursement,
+                        max_reimbursement=max_reimbursement,
                     )
 
             elif section_name.strip() == "Professional Charges Exceptions":
                 # Not useful - presently mostly anesthesia rates and descriptive text
                 pass
-            elif section_name.strip() == "Inpatient De-identified Minimum Negotiated Charge":
+            elif (
+                section_name.strip()
+                == "Inpatient De-identified Minimum Negotiated Charge"
+            ):
                 # Valid keys: ['MS-DRG', 'Description', 'De-Identified Minimum Negotiated Charge']
                 # Example:
                 #  {'De-Identified Minimum Negotiated Charge': 64864.0,
                 #   'Description': 'Other Multiple Significant Trauma With Cc',
                 #   'MS-DRG': '964'},
                 pass
-            elif section_name.strip() == "Inpatient De-identified Maximum Negotiated Charge":
+            elif (
+                section_name.strip()
+                == "Inpatient De-identified Maximum Negotiated Charge"
+            ):
                 # Valid keys: ['MS-DRG', 'Description', 'De-Identified Maximum Negotiated Charge']
                 # {'De-Identified Maximum Negotiated Charge': 315865.0,
                 #  'Description': 'Non-Extensive O.R. Procedures Unrelated To Principal '
@@ -170,21 +176,29 @@ class StanfordChargeMasterParser(ChargeMasterParser):
                         continue
 
                     yield ChargeMasterEntry(
-                        procedure_identifier = entry["MS-DRG"],
-                        procedure_description = entry["Description"],
-                        ms_drg_code = entry["MS-DRG"],
-                        payer = entry["Payer"],
-                        expected_reimbursement = entry["Payer Specific Negotiated Charge"],
+                        procedure_identifier=entry["MS-DRG"],
+                        procedure_description=entry["Description"],
+                        ms_drg_code=entry["MS-DRG"],
+                        payer=entry["Payer"],
+                        expected_reimbursement=entry[
+                            "Payer Specific Negotiated Charge"
+                        ],
                     )
 
-            elif section_name.strip() == "Outpatient De-identified Minimum Negotiated Charge":
+            elif (
+                section_name.strip()
+                == "Outpatient De-identified Minimum Negotiated Charge"
+            ):
                 # Valid keys: ['APC', 'Description', 'De-Identified Minimum Negotiated Charge']
                 # Example:
                 # {'APC': 'N905',
                 #  'De-Identified Minimum Negotiated Charge': 4.0,
                 #  'Description': 'Not Recognized by OPPS'}
                 pass
-            elif section_name.strip() == "Outpatient De-identified Maximum Negotiated Charge":
+            elif (
+                section_name.strip()
+                == "Outpatient De-identified Maximum Negotiated Charge"
+            ):
                 # Valid keys: ['APC', 'Description', 'De-Identified Maximum Negotiated Charge']
                 # Example:
                 # {'APC': 'N905',

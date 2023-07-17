@@ -8,9 +8,11 @@ import pprint
 import pytest
 import io
 
+
 @pytest.fixture
 def parser():
     yield CedarsSinaiChargeMasterParser()
+
 
 def test_simple_row(parser):
     wb = Workbook()
@@ -42,55 +44,68 @@ def test_simple_row(parser):
 
     expected_result = [
         ChargeMasterEntry(
-            procedure_identifier = 2600001,
-            location = 'all',
-            procedure_description = "HB IV INFUS HYDRATION 31-60 MIN",
-            gross_charge = 2161.71,
-            in_patient = False
+            procedure_identifier=2600001,
+            location="all",
+            procedure_description="HB IV INFUS HYDRATION 31-60 MIN",
+            gross_charge=2161.71,
+            in_patient=False,
         ),
         ChargeMasterEntry(
-            procedure_identifier = 2600001,
-            location = 'all',
-            procedure_description = "HB IV INFUS HYDRATION 31-60 MIN",
-            gross_charge = 2811.66,
-            in_patient = True,
-            cpt_code = 96360,
+            procedure_identifier=2600001,
+            location="all",
+            procedure_description="HB IV INFUS HYDRATION 31-60 MIN",
+            gross_charge=2811.66,
+            in_patient=True,
+            cpt_code=96360,
         ),
         ChargeMasterEntry(
-            procedure_identifier = 2600017,
-            location = 'all',
-            procedure_description = "HB APPL ON-BODY INJECTOR SUBQ INJ",
-            gross_charge = 844.45,
-            in_patient = False,
+            procedure_identifier=2600017,
+            location="all",
+            procedure_description="HB APPL ON-BODY INJECTOR SUBQ INJ",
+            gross_charge=844.45,
+            in_patient=False,
         ),
         ChargeMasterEntry(
-            procedure_identifier = 2600017,
-            location = 'all',
-            procedure_description = "HB APPL ON-BODY INJECTOR SUBQ INJ",
-            gross_charge = 844.45,
-            in_patient = True,
-            cpt_code = 96377,
+            procedure_identifier=2600017,
+            location="all",
+            procedure_description="HB APPL ON-BODY INJECTOR SUBQ INJ",
+            gross_charge=844.45,
+            in_patient=True,
+            cpt_code=96377,
         ),
         ChargeMasterEntry(
-            procedure_identifier = 2700005,
-            location = 'all',
-            procedure_description = "HB CYTOTOXIC SPILL KIT",
-            gross_charge = 254.09,
-            in_patient = False,
+            procedure_identifier=2700005,
+            location="all",
+            procedure_description="HB CYTOTOXIC SPILL KIT",
+            gross_charge=254.09,
+            in_patient=False,
         ),
     ]
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         filename = os.path.join(tmp_dir, "cedars.xlsx")
         wb.save(filename)
-        actual_result = list(parser.parse_artifacts({"https://www.cedars-sinai.org/content/dam/cedars-sinai/billing-insurance/documents/cedars-sinai-changemaster-july-2022.xlsx" : open(filename, "rb")}))
+        actual_result = list(
+            parser.parse_artifacts(
+                {
+                    "https://www.cedars-sinai.org/content/dam/cedars-sinai/billing-insurance/documents/cedars-sinai-changemaster-july-2022.xlsx": open(
+                        filename, "rb"
+                    )
+                }
+            )
+        )
     # pprint.pprint(actual_result)
     assert sorted(expected_result) == sorted(actual_result)
+
 
 def test_institution_name(parser):
     assert CedarsSinaiChargeMasterParser.institution_name == "Cedars-Sinai"
     assert parser.institution_name == "Cedars-Sinai"
 
+
 def test_artifact_urls(parser):
-    assert CedarsSinaiChargeMasterParser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS
+    assert (
+        CedarsSinaiChargeMasterParser.artifact_urls
+        == CedarsSinaiChargeMasterParser.ARTIFACT_URLS
+    )
     assert parser.artifact_urls == CedarsSinaiChargeMasterParser.ARTIFACT_URLS
