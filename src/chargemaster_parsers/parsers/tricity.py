@@ -49,17 +49,13 @@ class TriCityChargeMasterParser(ChargeMasterParser):
 
                 procedure_identifier = None
                 procedure_description = None
-                code_type = None
                 ms_drg_code = None
                 cpt_code = None
                 hcpcs_code = None
-                ndc_code = None
                 max_reimbursement = None
                 min_reimbursement = None
                 expected_reimbursement = None
                 in_patient = None
-                payer = None
-                plan = None
                 gross_charge = None
                 nubc_revenue_code = None
                 extra_data = {}
@@ -94,54 +90,21 @@ class TriCityChargeMasterParser(ChargeMasterParser):
                     else:
                         hcpcs_code = code
                 elif code_type in ("ICD10", "ICD9", "Softcoded", "Pharmacy"):
-                    # Don't know what to do with these yet
-                    continue
+                    extra_data["Code Type"] = code_type
+                    extra_data["Code"] = code
 
-                nubc_revenue_code = row_dict_values["Rev Code"]
+                temp = row_dict_values["Rev Code"]
+                if temp and temp != "NA":
+                    nubc_revenue_code = temp
                 in_patient = row_dict_values["Patient Type"] == "IP"
 
-                temp = row_dict_values["Gross Charge"]
-                if temp and temp != "NA":
-                    if type(temp) is float:
-                        gross_charge = temp
-                    else:
-                        try:
-                            gross_charge = float(temp.replace("$", "").replace(",", ""))
-                        except ValueError:
-                            pass
+                gross_charge = self.parse_price(row_dict_values["Gross Charge"])
+                cash_price = self.parse_price(row_dict_values["Cash Price"])
+                if cash_price is not None:
+                    expected_reimbursement["Cash"] = cash_price
 
-                temp = row_dict_values["Cash Price"]
-                if temp and temp != "NA":
-                    if type(temp) is float:
-                        expected_reimbursement["Cash"] = temp
-                    else:
-                        try:
-                            temp = float(temp.replace(",", "").replace("$", ""))
-                            expected_reimbursement["Cash"] = temp
-                        except ValueError:
-                            pass
-
-                temp = row_dict_values["Min ($)"]
-                if temp:
-                    if type(temp) is float:
-                        min_reimbursement = temp
-                    else:
-                        try:
-                            temp = float(temp.replace(",", "").replace("$", ""))
-                            min_reimbursement = temp
-                        except ValueError:
-                            pass
-
-                temp = row_dict_values["Max ($)"]
-                if temp:
-                    if type(temp) is float:
-                        max_reimbursement = temp
-                    else:
-                        try:
-                            temp = float(temp.replace(",", "").replace("$", ""))
-                            max_reimbursement = temp
-                        except ValueError:
-                            pass
+                min_reimbursement = self.parse_price(row_dict_values["Min ($)"])
+                max_reimbursement = self.parse_price(row_dict_values["Max ($)"])
 
                 if not extra_data:
                     extra_data = None
@@ -156,6 +119,7 @@ class TriCityChargeMasterParser(ChargeMasterParser):
                             hcpcs_code=hcpcs_code,
                             cpt_code=cpt_code,
                             extra_data=extra_data,
+                            nubc_revenue_code=nubc_revenue_code,
                             payer="Cash",
                             in_patient=in_patient,
                         )
@@ -166,6 +130,7 @@ class TriCityChargeMasterParser(ChargeMasterParser):
                             gross_charge=gross_charge,
                             ms_drg_code=ms_drg_code,
                             hcpcs_code=hcpcs_code,
+                            nubc_revenue_code=nubc_revenue_code,
                             cpt_code=cpt_code,
                             extra_data=extra_data,
                             min_reimbursement=min_reimbursement,

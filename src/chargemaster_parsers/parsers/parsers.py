@@ -31,6 +31,21 @@ class ChargeMasterParser:
             f"No registered institution matched {institution}. Choices were {', '.join(cls.registered_parsers)}"
         )
 
+    # Helpers
+    def parse_price(self, price):
+        if price is None:
+            return None
+        elif type(price) is str:
+            try:
+                price = price.strip()
+                if price[0] == "$":
+                    price = price[1:]
+                return float(price.replace(",", ""))
+            except ValueError:
+                return None
+        else:
+            return float(price)
+
 
 class ChargeMasterEntry:
     __slots__ = sorted(
