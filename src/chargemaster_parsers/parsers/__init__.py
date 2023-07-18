@@ -12,3 +12,4 @@ from .uci import UCIChargeMasterParser
 from .southwest import SouthwestChargeMasterParser
 from .palomar import PalomarChargeMasterParser
 from .tricity import TriCityChargeMasterParser
+from .lluh import LLUHChargeMasterParser

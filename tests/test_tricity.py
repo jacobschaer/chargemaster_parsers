@@ -330,6 +330,7 @@ def test_cpt_ip(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
+            nubc_revenue_code="450",
         ),
         ChargeMasterEntry(
             cpt_code="51701",
@@ -341,6 +342,7 @@ def test_cpt_ip(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
+            nubc_revenue_code="450",
         ),
         ChargeMasterEntry(
             cpt_code="51701",
@@ -349,6 +351,7 @@ def test_cpt_ip(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
+            nubc_revenue_code="450",
         ),
     ]
 
@@ -380,6 +383,7 @@ def test_cpt_op(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
+            nubc_revenue_code="450",
         ),
         ChargeMasterEntry(
             cpt_code="51701",
@@ -391,6 +395,7 @@ def test_cpt_op(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
+            nubc_revenue_code="450",
         ),
         ChargeMasterEntry(
             cpt_code="51701",
@@ -399,6 +404,7 @@ def test_cpt_op(parser):
             procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
+            nubc_revenue_code="450",
         ),
     ]
 
@@ -430,6 +436,7 @@ def test_hcpcs_code(parser):
             payer="Multiplan Commercial",
             procedure_description="E0262 RBC CP2D 500",
             procedure_identifier="CDM_P9021",
+            nubc_revenue_code="390",
         ),
         ChargeMasterEntry(
             expected_reimbursement=156.75,
@@ -441,6 +448,7 @@ def test_hcpcs_code(parser):
             payer="Sharp Health Plan (HMO,PPO,Covered California)",
             procedure_description="E0262 RBC CP2D 500",
             procedure_identifier="CDM_P9021",
+            nubc_revenue_code="390",
         ),
         ChargeMasterEntry(
             gross_charge=171.0,
@@ -449,6 +457,7 @@ def test_hcpcs_code(parser):
             payer="Cash",
             procedure_description="E0262 RBC CP2D 500",
             procedure_identifier="CDM_P9021",
+            nubc_revenue_code="390",
         ),
     ]
 

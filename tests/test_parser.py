@@ -87,3 +87,13 @@ def test_invalid():
         ValueError, match=r"No registered institution matched fake. Choices were.*"
     ):
         ChargeMasterParser.build("fake")
+
+
+def test_parse_price():
+    sut = ChargeMasterParser()
+    assert sut.parse_price("NA") == None
+    assert sut.parse_price("$1234.45 ") == 1234.45
+    assert sut.parse_price(None) == None
+    assert sut.parse_price(1) == 1.0
+    assert sut.parse_price(" 1,234.5 ") == 1234.5
+    assert sut.parse_price(" $1,234") == 1234
