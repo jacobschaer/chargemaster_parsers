@@ -22,7 +22,7 @@ class TriCityChargeMasterParser(ChargeMasterParser):
             "Max ($)",
         )
 
-        reader = csv.reader(io.TextIOWrapper(artifacts[self.ARTIFACT_URL]))
+        reader = csv.reader(io.TextIOWrapper(artifacts[self.ARTIFACT_URL], encoding='cp1252', newline=''))
         headers = None
         for row in reader:
             if headers is None:
