@@ -327,7 +327,7 @@ def test_cpt_ip(parser):
             max_reimbursement=214.2,
             min_reimbursement=168.3,
             payer="Multiplan Commercial",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
             nubc_revenue_code="450",
@@ -339,7 +339,7 @@ def test_cpt_ip(parser):
             max_reimbursement=214.2,
             min_reimbursement=168.3,
             payer="Sharp Health Plan (HMO,PPO,Covered California)",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
             nubc_revenue_code="450",
@@ -348,7 +348,7 @@ def test_cpt_ip(parser):
             cpt_code="51701",
             gross_charge=183.6,
             payer="Cash",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=True,
             nubc_revenue_code="450",
@@ -380,7 +380,7 @@ def test_cpt_op(parser):
             max_reimbursement=214.2,
             min_reimbursement=168.3,
             payer="Multiplan Commercial",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
             nubc_revenue_code="450",
@@ -392,7 +392,7 @@ def test_cpt_op(parser):
             max_reimbursement=214.2,
             min_reimbursement=168.3,
             payer="Sharp Health Plan (HMO,PPO,Covered California)",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
             nubc_revenue_code="450",
@@ -401,10 +401,116 @@ def test_cpt_op(parser):
             cpt_code="51701",
             gross_charge=183.6,
             payer="Cash",
-            procedure_description="51701 INSERTION STRAIGHT CATHETERTECH FEE",
+            procedure_description="INSERTION STRAIGHT CATHETERTECH FEE",
             procedure_identifier="CDM_51701",
             in_patient=False,
             nubc_revenue_code="450",
+        ),
+    ]
+
+    assert sorted(expected_result) == sorted(actual_result)
+
+
+def test_leading_bad_characters(parser):
+    test_case = 'CDM,96360,"96360 - HYDRATION, FIRST HOUR",IP,260,$315.00 ,$189.00 , NA , NA , NA  , NA , NA , NA , NA , NA , NA , NA , NA , NA , NA  ,$220.50 , NA , NA  ,$173.25 , NA , NA , NA , NA  , NA , NA  , NA  , NA  , NA  , NA  , NA  , NA  , NA  , NA ,$173.25 ,$220.50 '
+
+    test_case = HEADER + "\n" + test_case
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                TriCityChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_case.encode("utf-8")
+                )
+            }
+        )
+    )
+
+    expected_result = [
+        ChargeMasterEntry(
+            cpt_code="96360",
+            expected_reimbursement=220.5,
+            gross_charge=315.0,
+            in_patient=True,
+            max_reimbursement=220.5,
+            min_reimbursement=173.25,
+            nubc_revenue_code="260",
+            payer="Multiplan Commercial",
+            procedure_description="HYDRATION, FIRST HOUR",
+            procedure_identifier="CDM_96360",
+        ),
+        ChargeMasterEntry(
+            cpt_code="96360",
+            expected_reimbursement=173.25,
+            gross_charge=315.0,
+            in_patient=True,
+            max_reimbursement=220.5,
+            min_reimbursement=173.25,
+            nubc_revenue_code="260",
+            payer="Sharp Health Plan (HMO,PPO,Covered California)",
+            procedure_description="HYDRATION, FIRST HOUR",
+            procedure_identifier="CDM_96360",
+        ),
+        ChargeMasterEntry(
+            cpt_code="96360",
+            gross_charge=189.0,
+            in_patient=True,
+            nubc_revenue_code="260",
+            payer="Cash",
+            procedure_description="HYDRATION, FIRST HOUR",
+            procedure_identifier="CDM_96360",
+        ),
+    ]
+
+    assert sorted(expected_result) == sorted(actual_result)
+
+
+def test_pipe(parser):
+    test_case = 'CDM,1-86671|2-86671,"SACCHAROMYCES CEREVISIAE IGG, IGA ARUP",IP,302,$56.40 ,$33.84 , NA , NA , NA  , NA , NA , NA , NA , NA , NA , NA , NA , NA , NA  ,$39.48 , NA , NA  ,$31.02 , NA , NA , NA , NA  , NA , NA  , NA  , NA  , NA  , NA  , NA  , NA  , NA  , NA ,$31.02 ,$39.48 '
+
+    test_case = HEADER + "\n" + test_case
+    actual_result = list(
+        parser.parse_artifacts(
+            {
+                TriCityChargeMasterParser.ARTIFACT_URL: io.BytesIO(
+                    test_case.encode("utf-8")
+                )
+            }
+        )
+    )
+
+    expected_result = [
+        ChargeMasterEntry(
+            expected_reimbursement=39.48,
+            extra_data={"Code Type": "CDM", "Code": "1-86671|2-86671"},
+            gross_charge=56.4,
+            in_patient=True,
+            max_reimbursement=39.48,
+            min_reimbursement=31.02,
+            nubc_revenue_code="302",
+            payer="Multiplan Commercial",
+            procedure_description="SACCHAROMYCES CEREVISIAE IGG, IGA ARUP",
+            procedure_identifier="CDM_1-86671|2-86671",
+        ),
+        ChargeMasterEntry(
+            expected_reimbursement=31.02,
+            extra_data={"Code Type": "CDM", "Code": "1-86671|2-86671"},
+            gross_charge=56.4,
+            in_patient=True,
+            max_reimbursement=39.48,
+            min_reimbursement=31.02,
+            nubc_revenue_code="302",
+            payer="Sharp Health Plan (HMO,PPO,Covered California)",
+            procedure_description="SACCHAROMYCES CEREVISIAE IGG, IGA ARUP",
+            procedure_identifier="CDM_1-86671|2-86671",
+        ),
+        ChargeMasterEntry(
+            extra_data={"Code Type": "CDM", "Code": "1-86671|2-86671"},
+            gross_charge=33.84,
+            in_patient=True,
+            nubc_revenue_code="302",
+            payer="Cash",
+            procedure_description="SACCHAROMYCES CEREVISIAE IGG, IGA ARUP",
+            procedure_identifier="CDM_1-86671|2-86671",
         ),
     ]
 
