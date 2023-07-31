@@ -87,7 +87,9 @@ class TriCityChargeMasterParser(ChargeMasterParser):
                 procedure_identifier = code_type + "_" + code
 
                 if procedure_description:
-                    match = re.match(rf'^\s*({code})?[^a-zA-Z0-9()]*(.+?)\s*$', procedure_description)
+                    match = re.match(
+                        rf"^\s*({code})?[^a-zA-Z0-9()]*(.+?)\s*$", procedure_description
+                    )
                     procedure_description = match.groups()[1]
 
                 if code_type == "DRG":

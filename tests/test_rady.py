@@ -93,7 +93,11 @@ def test_cpt(parser):
     ws.cell(row=1, column=2, value="Item Description")
     ws.cell(row=1, column=3, value="Load Price")
     ws.cell(row=2, column=1, value="00829502")
-    ws.cell(row=2, column=2, value="(99202) RCH EXPANDED PROBLEM FOCUSED,STRAIGHTFORWARD-20MIN")
+    ws.cell(
+        row=2,
+        column=2,
+        value="(99202) RCH EXPANDED PROBLEM FOCUSED,STRAIGHTFORWARD-20MIN",
+    )
     ws.cell(row=2, column=3, value=300.00)
 
     expected_result = [
