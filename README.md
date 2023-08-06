@@ -98,7 +98,7 @@ The algorithm normally goes like this:
 * procedure_identifier - A unique identifer for the chargemaster entry. Typically this isn't useful beyond tracking over time
 * procedure_description - The human readable name of the chargemaster etnry, though often riddled with abbreviations and shorthand
 * ndc_code - National Drug Code. For medication/medical goods line-items.
-* nubc_revenue_code - Some institutions also list a National Uniform Billing Code though it's rare and not super useful
+* nubc_revenue_code - Some institutions also list a National Uniform Billing Code though it's rare and not super useful. This code tells insurance companies which department the procedure was performed in (i.e. emergency room, operating room, etc.).
 * cpt_code: CPT&copy; (Current Procedural Terminology) Code - A subset of HCPCS codes that these are copyrighted and require licensing for use.
 * hcpcs_code: Healthcare Common Procedure Coding System codes. These are provided by the National Institute of Health NIH and, with the exception of the CPT subset, free to use
 * ms_drg_code: Medicare Severity Diagnosis Related Groups code. For hospitalizations rather than procedures.
