@@ -15,7 +15,6 @@ class UCIChargeMasterParser(ChargeMasterParser):
                 for category, entries in data_dict.items():
                     if category == 'File Summary':
                         effective_date = entries[0]["Prices Posted And Effective"]
-                        print(effective_date)
                         # "Hospital Name": "University of California Irvine Medical Center",
                         # "Prices Posted And Effective": "8/1/2022 12:00:00 AM",
                         # "File Disclaimer": "The information contained in this file is intended for informational purposes only and does not represent any obligation or agreement.",
@@ -35,36 +34,37 @@ class UCIChargeMasterParser(ChargeMasterParser):
                             procedure_identifier = entry.get("Itemcode", None) 
                             procedure_description = entry.get("Description", None)
                             hcpcs_code = entry.get("CDM HCPCS", None)
-                            uci_hb_full_price = entry.get("UCI HB OUTPATIENT", None)
-                            cash_price = entry.get("UCI HB OUTPATIENT Discount Cash Price", None)
+                            uci_hb_full_price = entry.get("UCI HB OUTPATIENT RATE Price", None)
+                            cash_price = entry.get("UCI HB OUTPATIENT RATE Discounted Cash Price", None)
                             nubc_revenue_code = entry.get("CDM Revenue Code", None)
 
-                            if prev_hcpcs == hcpcs_code:
-                                 continue
-                            else:
-                                 prev_hcpcs = hcpcs_code
-                                
+                            # if prev_hcpcs == hcpcs_code:
+                            #      continue
+                            # else:
+                            #      prev_hcpcs = hcpcs_code
                             if uci_hb_full_price != 'N/A': # add UCI HB payer entry only if there's a price listed
-                                yield ChargeMasterEntry(
-                                    #procedure_identifier = procedure_identifier,
-                                    procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
-                                    in_patient = False,
-                                    payer = 'UCI HB',
-                                    gross_charge = float(uci_hb_full_price.replace(',', '')),
-                                    extra_data = {'Itemcode': procedure_identifier},
-                                    nubc_revenue_code = nubc_revenue_code,
-                                )
+                                if uci_hb_full_price is not None:
+                                    yield ChargeMasterEntry(
+                                        #procedure_identifier = procedure_identifier,
+                                        procedure_description = procedure_description,
+                                        hcpcs_code = hcpcs_code,
+                                        in_patient = False,
+                                        payer = 'UCI HB',
+                                        gross_charge = float(uci_hb_full_price.replace(',', '')),
+                                        extra_data = {'Itemcode': procedure_identifier},
+                                        nubc_revenue_code = nubc_revenue_code,
+                                    )
 
                             if cash_price != 'N/A': # add cash payer entry only if there's a price listed
-                                yield ChargeMasterEntry(
-                                    #procedure_identifier = procedure_identifier,
-                                    procedure_description = procedure_description,
-                                    hcpcs_code = hcpcs_code,
-                                    in_patient = False,
-                                    payer = 'Cash',
-                                    gross_charge = float(cash_price.replace(',', '')),
-                                    extra_data = {'Itemcode': procedure_identifier},
-                                    nubc_revenue_code = nubc_revenue_code,
-                                )
-        
+                                if cash_price is not None:
+                                    yield ChargeMasterEntry(
+                                        #procedure_identifier = procedure_identifier,
+                                        procedure_description = procedure_description,
+                                        hcpcs_code = hcpcs_code,
+                                        in_patient = False,
+                                        payer = 'Cash',
+                                        gross_charge = float(cash_price.replace(',', '')),
+                                        extra_data = {'Itemcode': procedure_identifier},
+                                        nubc_revenue_code = nubc_revenue_code,
+                                    )
+            
