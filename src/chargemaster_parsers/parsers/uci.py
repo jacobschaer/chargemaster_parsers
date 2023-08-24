@@ -38,10 +38,6 @@ class UCIChargeMasterParser(ChargeMasterParser):
                             cash_price = entry.get("UCI HB OUTPATIENT RATE Discounted Cash Price", None)
                             nubc_revenue_code = entry.get("CDM Revenue Code", None)
 
-                            # if prev_hcpcs == hcpcs_code:
-                            #      continue
-                            # else:
-                            #      prev_hcpcs = hcpcs_code
                             if uci_hb_full_price != 'N/A': # add UCI HB payer entry only if there's a price listed
                                 if uci_hb_full_price is not None:
                                     yield ChargeMasterEntry(
