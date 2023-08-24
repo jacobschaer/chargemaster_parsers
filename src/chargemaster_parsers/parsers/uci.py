@@ -41,26 +41,24 @@ class UCIChargeMasterParser(ChargeMasterParser):
                             if uci_hb_full_price != 'N/A': # add UCI HB payer entry only if there's a price listed
                                 if uci_hb_full_price is not None:
                                     yield ChargeMasterEntry(
-                                        #procedure_identifier = procedure_identifier,
+                                        procedure_identifier = procedure_identifier,
                                         procedure_description = procedure_description,
                                         hcpcs_code = hcpcs_code,
                                         in_patient = False,
                                         payer = 'UCI HB',
                                         gross_charge = float(uci_hb_full_price.replace(',', '')),
-                                        extra_data = {'Itemcode': procedure_identifier},
                                         nubc_revenue_code = nubc_revenue_code,
                                     )
 
                             if cash_price != 'N/A': # add cash payer entry only if there's a price listed
                                 if cash_price is not None:
                                     yield ChargeMasterEntry(
-                                        #procedure_identifier = procedure_identifier,
+                                        procedure_identifier = procedure_identifier,
                                         procedure_description = procedure_description,
                                         hcpcs_code = hcpcs_code,
                                         in_patient = False,
                                         payer = 'Cash',
                                         gross_charge = float(cash_price.replace(',', '')),
-                                        extra_data = {'Itemcode': procedure_identifier},
                                         nubc_revenue_code = nubc_revenue_code,
                                     )
             

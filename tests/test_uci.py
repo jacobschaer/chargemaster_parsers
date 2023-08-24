@@ -70,40 +70,40 @@ def test_gross_charge_entry(parser):
 
     expected_result = [
         ChargeMasterEntry(
+            procedure_identifier = "00000001_7143",       
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
             hcpcs_code = '10021',
             in_patient = False,
             payer = 'UCI HB',
             gross_charge = 532.00,
-             extra_data = {"Itemcode": "00000001_7143"},
             nubc_revenue_code = '761'         
         ), 
     
         ChargeMasterEntry(
+            procedure_identifier = "00000001_7143",       
             procedure_description = "HB FINE NEEDLE ASPIRATION BX W/O IMG GDN 1ST LESION",
             hcpcs_code = '10021',
             in_patient = False,
             payer = 'Cash',
             gross_charge = 212.8,
-            extra_data = {"Itemcode": "00000001_7143"},
             nubc_revenue_code = '761',     
         ),
         ChargeMasterEntry(
+            procedure_identifier = "00010020_7809",
             procedure_description = "HB BEVACIZUMAB 0.25 MG",
             hcpcs_code = 'C9257',
             in_patient = False,
             payer = 'UCI HB',
             gross_charge = 25.00,
-            extra_data = {"Itemcode": "00010020_7809"},
             nubc_revenue_code = None,
         ),
         ChargeMasterEntry(
+            procedure_identifier = "00010020_7809",
             procedure_description = "HB BEVACIZUMAB 0.25 MG",
             hcpcs_code = 'C9257',
             in_patient = False,
             payer = 'Cash',
             gross_charge = 10.0,
-            extra_data = {"Itemcode": "00010020_7809"},
             nubc_revenue_code = None,
         ),
     ]
