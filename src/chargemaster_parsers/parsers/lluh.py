@@ -27,7 +27,9 @@ class LLUHChargeMasterParser(ChargeMasterParser):
 
         for artifact in artifacts:
             location = self.URL_TO_INSTITUTION[artifact]
-            reader = csv.reader(io.TextIOWrapper(artifacts[artifact]))
+            reader = csv.reader(
+                io.TextIOWrapper(artifacts[artifact], encoding="cp1252", newline="")
+            )
             headers = None
             for row in reader:
                 if headers is None:

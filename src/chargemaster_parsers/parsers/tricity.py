@@ -22,7 +22,11 @@ class TriCityChargeMasterParser(ChargeMasterParser):
             "Max ($)",
         )
 
-        reader = csv.reader(io.TextIOWrapper(artifacts[self.ARTIFACT_URL]))
+        reader = csv.reader(
+            io.TextIOWrapper(
+                artifacts[self.ARTIFACT_URL], encoding="cp1252", newline=""
+            )
+        )
         headers = None
         for row in reader:
             if headers is None:
@@ -82,11 +86,21 @@ class TriCityChargeMasterParser(ChargeMasterParser):
                 code = row_dict_values["Code"]
                 procedure_identifier = code_type + "_" + code
 
+                if procedure_description:
+                    match = re.match(
+                        rf"^\s*({code})?[^a-zA-Z0-9()]*(.+?)\s*$", procedure_description
+                    )
+                    procedure_description = match.groups()[1]
+
                 if code_type == "DRG":
                     ms_drg_code = str(int(code)).rjust(3, "0")
                 elif code_type == "CDM":
-                    if re.match(r"[0-9]{4}[0-9A-Za-z]$", code):
+                    if re.match(r"^[0-9]{4}[0-9A-Za-z]$", code):
                         cpt_code = code
+                    elif "|" in code:
+                        # These are likely two HCPCs combined with | but rare
+                        extra_data["Code Type"] = code_type
+                        extra_data["Code"] = code
                     else:
                         hcpcs_code = code
                 elif code_type in ("ICD10", "ICD9", "Softcoded", "Pharmacy"):

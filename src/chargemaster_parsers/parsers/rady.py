@@ -36,7 +36,14 @@ class RadyChargeMasterParser(ChargeMasterParser):
                 if itemcode_index is not None:
                     procedure_identifier = row[itemcode_index].value
 
-                description = row[description_index].value[4:].strip()  # Remove "RCH "
+                description = row[description_index].value
+                cpt_code = None
+                match = re.match(r"^\s*(\(.+?\))?\s*RCH\s*(.+?)$", description)
+                if match:
+                    cpt_code = match.groups()[0]
+                    description = match.groups()[1]
+                    if cpt_code:
+                        cpt_code = cpt_code[1:-1]
 
                 try:
                     price = row[price_index].value
@@ -47,6 +54,7 @@ class RadyChargeMasterParser(ChargeMasterParser):
                         procedure_identifier=procedure_identifier,
                         procedure_description=description,
                         gross_charge=price,
+                        cpt_code=cpt_code,
                     )
                 except ValueError as ex:
                     pass

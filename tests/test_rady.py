@@ -86,6 +86,40 @@ def test_simple_row_v2(parser):
     assert sorted(expected_result) == sorted(actual_result)
 
 
+def test_cpt(parser):
+    wb = Workbook()
+    ws = wb.active
+    ws.cell(row=1, column=1, value="Itemcode")
+    ws.cell(row=1, column=2, value="Item Description")
+    ws.cell(row=1, column=3, value="Load Price")
+    ws.cell(row=2, column=1, value="00829502")
+    ws.cell(
+        row=2,
+        column=2,
+        value="(99202) RCH EXPANDED PROBLEM FOCUSED,STRAIGHTFORWARD-20MIN",
+    )
+    ws.cell(row=2, column=3, value=300.00)
+
+    expected_result = [
+        ChargeMasterEntry(
+            procedure_identifier="00829502",
+            procedure_description="EXPANDED PROBLEM FOCUSED,STRAIGHTFORWARD-20MIN",
+            cpt_code="99202",
+            gross_charge=300.0,
+        ),
+    ]
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        filename = os.path.join(tmp_dir, "rady.xlsx")
+        wb.save(filename)
+        actual_result = list(
+            parser.parse_artifacts(
+                {RadyChargeMasterParser.ARTIFACT_URL: open(filename, "rb")}
+            )
+        )
+    assert sorted(expected_result) == sorted(actual_result)
+
+
 def test_institution_name(parser):
     assert RadyChargeMasterParser.institution_name == "Rady"
     assert parser.institution_name == "Rady"
