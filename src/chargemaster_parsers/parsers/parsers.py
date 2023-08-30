@@ -49,28 +49,29 @@ class ChargeMasterParser:
 
 class ChargeMasterEntry:
     __slots__ = sorted(
-      [
-        "location",
-        "procedure_identifier",
-        "procedure_description",
-        "ndc_code",
-        "nubc_revenue_code",
-        "cpt_code",
-        "hcpcs_code",
-        "ms_drg_code",
-        "max_reimbursement",
-        "min_reimbursement",
-        "expected_reimbursement",
-        "in_patient",
-        "payer",
-        "plan",
-        "gross_charge",
-        "extra_data",
-        # Unused
-        "charge_code",
-        "quantity",
-        "in_patient_price"
-    ])
+        [
+            "location",
+            "procedure_identifier",
+            "procedure_description",
+            "ndc_code",
+            "nubc_revenue_code",
+            "cpt_code",
+            "hcpcs_code",
+            "ms_drg_code",
+            "max_reimbursement",
+            "min_reimbursement",
+            "expected_reimbursement",
+            "in_patient",
+            "payer",
+            "plan",
+            "gross_charge",
+            "extra_data",
+            # Unused
+            "charge_code",
+            "quantity",
+            "in_patient_price",
+        ]
+    )
 
     def __init__(self, **kwargs):
         for key in self.__slots__:
